@@ -28,11 +28,11 @@ module.exports = {
     const planId = planes[0].id;
 
     const materias = await queryInterface.bulkInsert('Materias', [
-      { nombre: 'Matemática I', anio: 1, tipo: 'anual', createdAt: new Date(), updatedAt: new Date() },
-      { nombre: 'Programación I', anio: 1, tipo: 'anual', createdAt: new Date(), updatedAt: new Date() },
-      { nombre: 'Matemática II', anio: 2, tipo: 'anual', createdAt: new Date(), updatedAt: new Date() },
-      { nombre: 'Programación II', anio: 2, tipo: 'anual', createdAt: new Date(), updatedAt: new Date() },
-      { nombre: 'Algoritmos', anio: 2, tipo: 'cuatrimestral', createdAt: new Date(), updatedAt: new Date() },
+      { nombre: 'Matemática I', anio: 1, tipo: 'anual', cargaHoraria: 128, createdAt: new Date(), updatedAt: new Date() },
+      { nombre: 'Programación I', anio: 1, tipo: 'anual', cargaHoraria: 128, createdAt: new Date(), updatedAt: new Date() },
+      { nombre: 'Matemática II', anio: 2, tipo: 'anual', cargaHoraria: 128, createdAt: new Date(), updatedAt: new Date() },
+      { nombre: 'Programación II', anio: 2, tipo: 'anual', cargaHoraria: 128, createdAt: new Date(), updatedAt: new Date() },
+      { nombre: 'Algoritmos', anio: 2, tipo: 'cuatrimestral', cargaHoraria: 64, createdAt: new Date(), updatedAt: new Date() },
     ], { returning: true });
 
     const planMaterias = materias.map(m => ({
