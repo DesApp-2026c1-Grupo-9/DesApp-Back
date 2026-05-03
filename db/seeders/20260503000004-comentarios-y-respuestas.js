@@ -103,6 +103,15 @@ module.exports = {
         },
       ]);
     }
+
+    // Actualizar los contadores de comentarios en TODAS las novedades (incluye comentarios y respuestas)
+    await queryInterface.sequelize.query(`
+      UPDATE "Novedades" n
+      SET "comentariosCount" = (
+        SELECT COUNT(*) FROM "Comentarios" c
+        WHERE c."novedadId" = n.id
+      );
+    `);
   },
 
   down: async (queryInterface, Sequelize) => {

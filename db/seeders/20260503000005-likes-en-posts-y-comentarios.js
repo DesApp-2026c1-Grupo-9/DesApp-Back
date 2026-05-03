@@ -75,6 +75,15 @@ module.exports = {
         }
       }
     }
+
+    // Actualizar los contadores de likes en las novedades
+    await queryInterface.sequelize.query(`
+      UPDATE "Novedades" n
+      SET "likesCount" = (
+        SELECT COUNT(*) FROM "Likes" l
+        WHERE l."novedadId" = n.id
+      );
+    `);
   },
 
   down: async (queryInterface, Sequelize) => {
