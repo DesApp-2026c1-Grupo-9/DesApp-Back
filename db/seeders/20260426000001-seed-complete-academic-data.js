@@ -23,7 +23,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          nombre: 'Licenciatura en Inteligencia Artificial',
+          nombre: 'Tecnicatura en Inteligencia Artificial',
           titulo: 'Licenciado en Inteligencia Artificial',
           instituto: 'Universidad Nacional de Hurlingham',
           duracion: 3,
@@ -53,7 +53,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          nombre: 'Plan 2026 - Licenciatura en IA',
+          nombre: 'Plan 2026 - Tecnicatura en IA',
           estado: 'vigente',
           carreraId: carreras[2].id,
           createdAt: new Date(),
