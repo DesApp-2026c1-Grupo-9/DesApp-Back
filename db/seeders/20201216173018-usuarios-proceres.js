@@ -2,12 +2,17 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
+    // Primero limpiar avatarUrl de usuarios existentes si los hay
+    await queryInterface.sequelize.query(
+      'UPDATE "Usuarios" SET "avatarUrl" = NULL WHERE "avatarUrl" IS NOT NULL;'
+    );
+
     await queryInterface.bulkInsert('Usuarios', [
       {
         nombre: 'Juana',
         apellido: 'Azurduy',
         fechaNacimiento: '1780-07-12',
-        avatarUrl: 'http://www.laizquierdadiario.com/IMG/arton21559.jpg',
+        avatarUrl: null,
         email: 'juana.azurduy@example.com',
         password: 'hashedpassword',
         rol: 'estudiante',
@@ -19,8 +24,7 @@ module.exports = {
         nombre: 'José',
         apellido: 'Artigas',
         fechaNacimiento: '1764-06-19',
-        avatarUrl:
-          'https://www.famousbirthdays.com/faces/artigas-jose-image.jpg',
+        avatarUrl: null,
         email: 'jose.artigas@example.com',
         password: 'hashedpassword',
         rol: 'estudiante',
@@ -32,8 +36,7 @@ module.exports = {
         nombre: 'Simón',
         apellido: 'Bolívar',
         fechaNacimiento: '1783-04-24',
-        avatarUrl:
-          'https://img.goraymi.com/2019/01/15/95f0f23f742a6f7a28fd225745095d04_lg.jpg',
+        avatarUrl: null,
         email: 'simon.bolivar@example.com',
         password: 'hashedpassword',
         rol: 'estudiante',
