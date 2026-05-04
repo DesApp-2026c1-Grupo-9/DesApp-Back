@@ -157,7 +157,7 @@ module.exports = {
       (c) => c.nombre === 'Tecnicatura en Programación'
     );
     const licIA = carreras.find(
-      (c) => c.nombre === 'Licenciatura en Inteligencia Artificial'
+      (c) => c.nombre === 'Tecnicatura en Inteligencia Artificial'
     );
 
     // Asignar estudiantes a carreras de manera realista
