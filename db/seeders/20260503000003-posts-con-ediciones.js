@@ -6,6 +6,37 @@ module.exports = {
     const haceUnaHora = new Date(now.getTime() - 60 * 60 * 1000);
     const haceDosDias = new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000);
 
+    // Obtener materias existentes
+    const materias = await queryInterface.sequelize.query(
+      'SELECT id, nombre FROM "Materias" WHERE nombre LIKE ? OR nombre LIKE ? LIMIT 5;',
+      {
+        replacements: ['%Programación%', '%Matemática%'],
+        type: queryInterface.sequelize.QueryTypes.SELECT,
+      }
+    );
+
+    const materiaProg =
+      materias.find((m) => m.nombre.includes('Programación')) || materias[0];
+    const materiaMat =
+      materias.find((m) => m.nombre.includes('Matemática')) || materias[1];
+
+    // Obtener IDs de usuarios por email
+    const usuarios = await queryInterface.sequelize.query(
+      `SELECT id, email FROM "Usuarios" WHERE email IN (?, ?, ?) ORDER BY id`,
+      {
+        replacements: [
+          'ana.garcia@estudiante.unahur.edu.ar',
+          'carlos.rodriguez@estudiante.unahur.edu.ar',
+          'maria.gonzalez@estudiante.unahur.edu.ar',
+        ],
+        type: queryInterface.sequelize.QueryTypes.SELECT,
+      }
+    );
+
+    const anaId = usuarios.find((u) => u.email.includes('ana'))?.id;
+    const carlosId = usuarios.find((u) => u.email.includes('carlos'))?.id;
+    const mariaId = usuarios.find((u) => u.email.includes('maria'))?.id;
+
     await queryInterface.bulkInsert('Novedades', [
       {
         tipo: 'posteo',
@@ -13,12 +44,12 @@ module.exports = {
         contenido:
           'Este post fue editado para mostrar la funcionalidad de edición. ¡Ahora se ve mucho mejor!',
         imagenUrl: null,
-        materiaId: null,
+        materiaId: materiaProg?.id,
         visible: true,
         esAutomatica: false,
         likesCount: 0,
         comentariosCount: 0,
-        autorId: 1,
+        autorId: anaId, // Ana García
         editedAt: haceUnaHora,
         createdAt: haceDosDias,
         updatedAt: haceUnaHora,
@@ -29,12 +60,12 @@ module.exports = {
         contenido:
           'Les comparto este repositorio con ejercicios resueltos de Álgebra Lineal. ¡Espero que les sirva!',
         imagenUrl: 'https://example.com/algebra-recursos.jpg',
-        materiaId: null,
+        materiaId: materiaMat?.id,
         visible: true,
         esAutomatica: false,
         likesCount: 0,
         comentariosCount: 0,
-        autorId: 2,
+        autorId: carlosId, // Carlos Rodríguez
         editedAt: null,
         createdAt: haceUnaHora,
         updatedAt: haceUnaHora,
@@ -45,12 +76,12 @@ module.exports = {
         contenido:
           '¿Alguien sabe si puedo cursar Programación III si tengo pendiente solo el parcial de Programación II?',
         imagenUrl: null,
-        materiaId: null,
+        materiaId: materiaProg?.id,
         visible: true,
         esAutomatica: false,
         likesCount: 0,
         comentariosCount: 0,
-        autorId: 3,
+        autorId: mariaId, // María González
         editedAt: null,
         createdAt: now,
         updatedAt: now,

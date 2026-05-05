@@ -31,7 +31,7 @@ module.exports = {
         {
           contenido: '¡Qué buen post! Me ayudó mucho.',
           novedadId: novedadId1,
-          usuarioId: 2,
+          usuarioId: 1,
           comentarioPadreId: null,
           editedAt: null,
           createdAt: hace1Hora,
@@ -50,7 +50,7 @@ module.exports = {
         {
           contenido: '¡Gracias por compartir! Justo necesitaba esto.',
           novedadId: novedadId2,
-          usuarioId: 1,
+          usuarioId: 3,
           comentarioPadreId: null,
           editedAt: null,
           createdAt: hace30Min,
@@ -95,7 +95,7 @@ module.exports = {
         {
           contenido: 'Gracias! Me costó pero valió la pena editarlo.',
           novedadId: novedadId1,
-          usuarioId: 1,
+          usuarioId: 3,
           comentarioPadreId: comentarioPadre[0].id,
           editedAt: null,
           createdAt: hace15Min,
