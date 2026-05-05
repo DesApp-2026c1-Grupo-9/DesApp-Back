@@ -1,0 +1,1 @@
+SELECT p.id, p.nombre, COUNT(pm."materiaId") as materias_count FROM "PlanesDeEstudio" p LEFT JOIN "PlanMaterias" pm ON p.id = pm."planId" WHERE p."carreraId" = 4 GROUP BY p.id, p.nombre;

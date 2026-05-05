@@ -23,7 +23,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          nombre: 'Licenciatura en Inteligencia Artificial',
+          nombre: 'Tecnicatura en Inteligencia Artificial',
           titulo: 'Licenciado en Inteligencia Artificial',
           instituto: 'Universidad Nacional de Hurlingham',
           duracion: 3,
@@ -53,7 +53,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          nombre: 'Plan 2026 - Licenciatura en IA',
+          nombre: 'Plan 2026 - Tecnicatura en IA',
           estado: 'vigente',
           carreraId: carreras[2].id,
           createdAt: new Date(),
@@ -747,6 +747,7 @@ module.exports = {
 
     // Segundo año
     const matII = materiasLicInfo.find((m) => m.nombre === 'Matemática II');
+    const inglesII = materiasLicInfo.find((m) => m.nombre === 'Inglés II');
     const progObjII = materiasLicInfo.find(
       (m) => m.nombre === 'Programación con Objetos II'
     );
@@ -767,6 +768,7 @@ module.exports = {
     // Correlatividades realistas
     correlatividadesLicInfo.push(
       { materiaId: matII.id, prerrequisitoId: matI.id },
+      { materiaId: inglesII.id, prerrequisitoId: inglesI.id }, // Inglés II requiere Inglés I
       { materiaId: estructDatos.id, prerrequisitoId: introProg.id },
       { materiaId: progObjI.id, prerrequisitoId: introProg.id },
       { materiaId: progObjII.id, prerrequisitoId: progObjI.id },
@@ -808,9 +810,16 @@ module.exports = {
     const progObjIITec = materiasTecProg.find(
       (m) => m.nombre === 'Programación de objetos II (Tecnicatura)'
     );
+    const inglesITec = materiasTecProg.find(
+      (m) => m.nombre === 'Inglés I (Tecnicatura)'
+    );
+    const inglesIITec = materiasTecProg.find(
+      (m) => m.nombre === 'Inglés II (Tecnicatura)'
+    );
 
     correlatividadesTecProg.push(
       { materiaId: matInfoII.id, prerrequisitoId: matInfoI.id },
+      { materiaId: inglesIITec.id, prerrequisitoId: inglesITec.id }, // Inglés II requiere Inglés I
       { materiaId: progEst.id, prerrequisitoId: logicaProb.id },
       { materiaId: progObjITec.id, prerrequisitoId: progEst.id },
       { materiaId: progObjIITec.id, prerrequisitoId: progObjITec.id }
@@ -851,10 +860,13 @@ module.exports = {
     const aprendAuto = materiasLicIA.find(
       (m) => m.nombre === 'Aprendizaje Automático'
     );
+    const inglesIIA = materiasLicIA.find((m) => m.nombre === 'Inglés I (IA)');
+    const inglesIIIA = materiasLicIA.find((m) => m.nombre === 'Inglés II (IA)');
 
     correlatividadesLicIA.push(
       { materiaId: algebra.id, prerrequisitoId: matInfoIIA.id },
       { materiaId: calculo.id, prerrequisitoId: matInfoIIA.id },
+      { materiaId: inglesIIIA.id, prerrequisitoId: inglesIIA.id }, // Inglés II (IA) requiere Inglés I (IA)
       {
         materiaId: tallerProgI.id,
         prerrequisitoId: materiasLicIA.find(
@@ -881,9 +893,59 @@ module.exports = {
         updatedAt: new Date(),
       }))
     );
+
+    // RELACIONES ESTUDIANTE-CARRERA
+    // Obtener los estudiantes existentes
+    const estudiantesExistentes = await queryInterface.sequelize.query(
+      'SELECT id FROM "Estudiantes"',
+      { type: queryInterface.sequelize.QueryTypes.SELECT }
+    );
+
+    console.log('Estudiantes encontrados:', estudiantesExistentes.length);
+
+    if (estudiantesExistentes.length > 0) {
+      // Asignar Diego Fernández (id 6) a Tecnicatura en IA
+      const diego = estudiantesExistentes.find((e) => e.id === 6);
+      if (diego) {
+        await queryInterface.bulkInsert('EstudianteCarreras', [
+          {
+            estudianteId: 6,
+            carreraId: carreras[2].id, // Tecnicatura en IA
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        ]);
+        console.log('Diego Fernández asignado a Tecnicatura en IA');
+      }
+
+      // Asignar otros estudiantes a diferentes carreras
+      const otrosEstudiantes = estudiantesExistentes.filter((e) => e.id !== 6);
+      const relacionesAdicionales = [];
+
+      for (let i = 0; i < otrosEstudiantes.length && i < 6; i++) {
+        const carreraIndex = i % 3; // Distribuir entre las 3 carreras
+        relacionesAdicionales.push({
+          estudianteId: otrosEstudiantes[i].id,
+          carreraId: carreras[carreraIndex].id,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
+      }
+
+      if (relacionesAdicionales.length > 0) {
+        await queryInterface.bulkInsert(
+          'EstudianteCarreras',
+          relacionesAdicionales
+        );
+        console.log(
+          `${relacionesAdicionales.length} estudiantes adicionales asignados a carreras`
+        );
+      }
+    }
   },
 
   down: async (queryInterface, Sequelize) => {
+    await queryInterface.bulkDelete('EstudianteCarreras', null, {});
     await queryInterface.bulkDelete('Correlatividades', null, {});
     await queryInterface.bulkDelete('PlanMaterias', null, {});
     await queryInterface.bulkDelete('Materias', null, {});
