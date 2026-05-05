@@ -3,11 +3,23 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     try {
-      // Obtener carreras
+      // Obtener carreras con sus planes de estudio vigente
       const carreras = await queryInterface.sequelize.query(
-        'SELECT id, nombre FROM "Carreras" ORDER BY id',
+        `SELECT c.id, c.nombre, p.id as "planId" 
+         FROM "Carreras" c 
+         INNER JOIN "PlanesDeEstudio" p ON c.id = p."carreraId" 
+         WHERE p.estado = 'vigente'
+         ORDER BY c.id`,
         { type: queryInterface.sequelize.QueryTypes.SELECT }
       );
+
+      if (!carreras || carreras.length === 0) {
+        throw new Error(
+          'No hay carreras con planes de estudio vigente. Ejecute primero el seed de datos académicos.'
+        );
+      }
+
+      console.log('Carreras encontradas con planes vigentes:', carreras.length);
 
       const licInfoId = carreras.find(
         (c) => c.nombre === 'Licenciatura en Informática'
@@ -94,6 +106,13 @@ module.exports = {
       ];
 
       for (const [nombre, apellido, email, fecha, carreraId] of datos) {
+        if (!carreraId) {
+          console.warn(
+            `Saltando ${nombre} ${apellido}: no se encontró la carrera correspondiente`
+          );
+          continue;
+        }
+
         // Verificar si el usuario ya existe
         let usuarioId;
         const existingUser = await queryInterface.sequelize.query(
@@ -103,13 +122,13 @@ module.exports = {
 
         if (existingUser && existingUser.length > 0) {
           usuarioId = existingUser[0].id;
-          // Actualizar sin avatar
+          // Actualizar usuario existente
           await queryInterface.sequelize.query(
             'UPDATE "Usuarios" SET nombre = $1, apellido = $2, "fechaNacimiento" = $3, "avatarUrl" = NULL WHERE id = $4',
             { bind: [nombre, apellido, fecha, usuarioId] }
           );
         } else {
-          // Crear usuario sin foto
+          // Crear nuevo usuario
           await queryInterface.sequelize.query(
             `INSERT INTO "Usuarios" (nombre, apellido, email, "fechaNacimiento", "avatarUrl", password, rol, activo, "createdAt", "updatedAt") 
                VALUES ($1, $2, $3, $4, NULL, $5, $6, $7, NOW(), NOW())`,
@@ -157,21 +176,40 @@ module.exports = {
             );
           }
 
-          // Asignar carrera
-          await queryInterface.sequelize.query(
-            `INSERT INTO "EstudianteCarreras" ("estudianteId", "carreraId", "createdAt", "updatedAt") 
-               SELECT e.id, ${carreraId}, NOW(), NOW() 
-               FROM "Estudiantes" e 
-               WHERE e."usuarioId" = ${usuarioId}
-               AND NOT EXISTS (
-                 SELECT 1 FROM "EstudianteCarreras" ec 
-                 WHERE ec."estudianteId" = e.id AND ec."carreraId" = ${carreraId}
-               )`,
-            { type: queryInterface.sequelize.QueryTypes.INSERT }
+          // Obtener el ID del estudiante
+          const estudiante = await queryInterface.sequelize.query(
+            'SELECT id FROM "Estudiantes" WHERE "usuarioId" = $1 LIMIT 1',
+            {
+              bind: [usuarioId],
+              type: queryInterface.sequelize.QueryTypes.SELECT,
+            }
           );
+          const estudianteId = estudiante[0]?.id;
+
+          if (estudianteId) {
+            // Asignar carrera (idempotente - verificar si ya existe la relación)
+            const existingRelacion = await queryInterface.sequelize.query(
+              'SELECT 1 FROM "EstudianteCarreras" WHERE "estudianteId" = $1 AND "carreraId" = $2 LIMIT 1',
+              {
+                bind: [estudianteId, carreraId],
+                type: queryInterface.sequelize.QueryTypes.SELECT,
+              }
+            );
+
+            if (!existingRelacion || existingRelacion.length === 0) {
+              await queryInterface.sequelize.query(
+                `INSERT INTO "EstudianteCarreras" ("estudianteId", "carreraId", "createdAt", "updatedAt") 
+                   VALUES ($1, $2, NOW(), NOW())`,
+                {
+                  bind: [estudianteId, carreraId],
+                  type: queryInterface.sequelize.QueryTypes.INSERT,
+                }
+              );
+            }
+          }
         }
       }
-      console.log('Seed de estudiantes completado exitosamente (sin fotos)');
+      console.log('Seed de estudiantes completado exitosamente (idempotente)');
     } catch (error) {
       console.error('Error in seed-estudiantes:', error.message);
       throw error;
