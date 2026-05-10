@@ -123,7 +123,7 @@ module.exports = {
         if (existingUser && existingUser.length > 0) {
           usuarioId = existingUser[0].id;
           // Actualizar usuario existente
-          await queryInterface.sequelize.query(
+          await queryInterface.sequelize.query( 
             'UPDATE "Usuarios" SET nombre = $1, apellido = $2, "fechaNacimiento" = $3, "avatarUrl" = NULL WHERE id = $4',
             { bind: [nombre, apellido, fecha, usuarioId] }
           );
