@@ -163,15 +163,10 @@ module.exports = {
 
           if (!existingEstudiante || existingEstudiante.length === 0) {
             await queryInterface.sequelize.query(
-              `INSERT INTO "Estudiantes" ("usuarioId", "perfilPublico", "mostrarEmail", "mostrarSituacionAcademica", "createdAt", "updatedAt") 
-                 VALUES ($1, $2, $3, $4, NOW(), NOW())`,
+              `INSERT INTO "Estudiantes" ("usuarioId", "createdAt", "updatedAt") 
+                 VALUES ($1, NOW(), NOW())`,
               {
-                bind: [
-                  usuarioId,
-                  Math.random() > 0.5,
-                  Math.random() > 0.7,
-                  Math.random() > 0.3,
-                ],
+                bind: [usuarioId],
               }
             );
           }
