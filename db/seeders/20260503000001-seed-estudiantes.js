@@ -103,6 +103,27 @@ module.exports = {
           '2001-10-30',
           licInfoId,
         ],
+        [
+          'Juana',
+          'Azurduy',
+          'juana.azurduy@example.com',
+          '1780-07-12',
+          licIAId,
+        ],
+        [
+          'José',
+          'Artigas',
+          'jose.artigas@example.com',
+          '1764-06-19',
+          tecProgId,
+        ],
+        [
+          'Simón',
+          'Bolívar',
+          'simon.bolivar@example.com',
+          '1783-04-24',
+          licInfoId,
+        ],
       ];
 
       for (const [nombre, apellido, email, fecha, carreraId] of datos) {
@@ -123,7 +144,7 @@ module.exports = {
         if (existingUser && existingUser.length > 0) {
           usuarioId = existingUser[0].id;
           // Actualizar usuario existente
-          await queryInterface.sequelize.query( 
+          await queryInterface.sequelize.query(
             'UPDATE "Usuarios" SET nombre = $1, apellido = $2, "fechaNacimiento" = $3, "avatarUrl" = NULL WHERE id = $4',
             { bind: [nombre, apellido, fecha, usuarioId] }
           );
