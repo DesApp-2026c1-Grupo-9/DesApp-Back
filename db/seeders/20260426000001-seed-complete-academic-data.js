@@ -215,9 +215,9 @@ module.exports = {
     const materiasLicInfo = [];
     for (const data of materiasLicInfoData) {
       const existing = await queryInterface.sequelize.query(
-        'SELECT id FROM "Materias" WHERE nombre = ? AND anio = ? LIMIT 1',
+        'SELECT id FROM "Materias" WHERE nombre = ? LIMIT 1',
         {
-          replacements: [data.nombre, data.anio],
+          replacements: [data.nombre],
           type: queryInterface.sequelize.QueryTypes.SELECT,
         }
       );
@@ -227,15 +227,16 @@ module.exports = {
       } else {
         await queryInterface.bulkInsert('Materias', [
           {
-            ...data,
+            nombre: data.nombre,
+            tipo: data.tipo,
             createdAt: new Date(),
             updatedAt: new Date(),
           },
         ]);
         const nuevo = await queryInterface.sequelize.query(
-          'SELECT id FROM "Materias" WHERE nombre = ? AND anio = ? LIMIT 1',
+          'SELECT id FROM "Materias" WHERE nombre = ? LIMIT 1',
           {
-            replacements: [data.nombre, data.anio],
+            replacements: [data.nombre],
             type: queryInterface.sequelize.QueryTypes.SELECT,
           }
         );
@@ -321,9 +322,9 @@ module.exports = {
     const materiasTecProg = [];
     for (const data of materiasTecProgData) {
       const existing = await queryInterface.sequelize.query(
-        'SELECT id FROM "Materias" WHERE nombre = ? AND anio = ? LIMIT 1',
+        'SELECT id FROM "Materias" WHERE nombre = ? LIMIT 1',
         {
-          replacements: [data.nombre, data.anio],
+          replacements: [data.nombre],
           type: queryInterface.sequelize.QueryTypes.SELECT,
         }
       );
@@ -333,15 +334,16 @@ module.exports = {
       } else {
         await queryInterface.bulkInsert('Materias', [
           {
-            ...data,
+            nombre: data.nombre,
+            tipo: data.tipo,
             createdAt: new Date(),
             updatedAt: new Date(),
           },
         ]);
         const nuevo = await queryInterface.sequelize.query(
-          'SELECT id FROM "Materias" WHERE nombre = ? AND anio = ? LIMIT 1',
+          'SELECT id FROM "Materias" WHERE nombre = ? LIMIT 1',
           {
-            replacements: [data.nombre, data.anio],
+            replacements: [data.nombre],
             type: queryInterface.sequelize.QueryTypes.SELECT,
           }
         );
@@ -415,9 +417,9 @@ module.exports = {
     const materiasLicIA = [];
     for (const data of materiasLicIAData) {
       const existing = await queryInterface.sequelize.query(
-        'SELECT id FROM "Materias" WHERE nombre = ? AND anio = ? LIMIT 1',
+        'SELECT id FROM "Materias" WHERE nombre = ? LIMIT 1',
         {
-          replacements: [data.nombre, data.anio],
+          replacements: [data.nombre],
           type: queryInterface.sequelize.QueryTypes.SELECT,
         }
       );
@@ -427,15 +429,16 @@ module.exports = {
       } else {
         await queryInterface.bulkInsert('Materias', [
           {
-            ...data,
+            nombre: data.nombre,
+            tipo: data.tipo,
             createdAt: new Date(),
             updatedAt: new Date(),
           },
         ]);
         const nuevo = await queryInterface.sequelize.query(
-          'SELECT id FROM "Materias" WHERE nombre = ? AND anio = ? LIMIT 1',
+          'SELECT id FROM "Materias" WHERE nombre = ? LIMIT 1',
           {
-            replacements: [data.nombre, data.anio],
+            replacements: [data.nombre],
             type: queryInterface.sequelize.QueryTypes.SELECT,
           }
         );
@@ -448,12 +451,18 @@ module.exports = {
       ...materiasLicInfo.map((m) => ({
         planId: planLicInfo.id,
         materiaId: m.id,
+        anio: m.anio,
       })),
       ...materiasTecProg.map((m) => ({
         planId: planTecProg.id,
         materiaId: m.id,
+        anio: m.anio,
       })),
-      ...materiasLicIA.map((m) => ({ planId: planLicIA.id, materiaId: m.id })),
+      ...materiasLicIA.map((m) => ({
+        planId: planLicIA.id,
+        materiaId: m.id,
+        anio: m.anio,
+      })),
     ];
 
     for (const data of planMateriasData) {
@@ -470,6 +479,7 @@ module.exports = {
           {
             planId: data.planId,
             materiaId: data.materiaId,
+            anio: data.anio,
             createdAt: new Date(),
             updatedAt: new Date(),
           },
