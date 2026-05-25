@@ -446,6 +446,11 @@ module.exports = {
       }
     }
 
+    // Deshabilitar trigger temporalmente porque CarreraMaterias aún no tiene datos
+    await queryInterface.sequelize.query(`
+      ALTER TABLE "PlanMaterias" DISABLE TRIGGER trg_check_materia_en_carrera;
+    `);
+
     // Asignar materias a planes de estudio (idempotente)
     const planMateriasData = [
       ...materiasLicInfo.map((m) => ({
@@ -486,6 +491,11 @@ module.exports = {
         ]);
       }
     }
+
+    // Re-habilitar trigger después de insertar PlanMaterias
+    await queryInterface.sequelize.query(`
+      ALTER TABLE "PlanMaterias" ENABLE TRIGGER trg_check_materia_en_carrera;
+    `);
 
     // Correlatividades Licenciatura en Informática (idempotente)
     const findMateria = (materias, nombre) =>
