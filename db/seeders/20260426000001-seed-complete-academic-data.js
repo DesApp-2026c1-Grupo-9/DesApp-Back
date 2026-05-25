@@ -492,8 +492,10 @@ module.exports = {
       materias.find((m) => m.nombre === nombre);
 
     const correlatividadesLicInfoData = [
-      { materia: 'Matemática II', prerrequisito: 'Matemática I' },
-      { materia: 'Inglés II', prerrequisito: 'Inglés I' },
+      {
+        materia: 'Organización de Computadoras',
+        prerrequisito: 'Introducción a la Programación',
+      },
       {
         materia: 'Estructuras de Datos',
         prerrequisito: 'Introducción a la Programación',
@@ -502,15 +504,34 @@ module.exports = {
         materia: 'Programación con Objetos I',
         prerrequisito: 'Introducción a la Programación',
       },
+      { materia: 'Bases de Datos', prerrequisito: 'Matemática I' },
+      { materia: 'Matemática II', prerrequisito: 'Matemática I' },
+      { materia: 'Inglés II', prerrequisito: 'Inglés I' },
       {
         materia: 'Programación con Objetos II',
         prerrequisito: 'Programación con Objetos I',
       },
-      { materia: 'Algoritmos', prerrequisito: 'Estructuras de Datos' },
+      {
+        materia: 'Redes de Computadoras',
+        prerrequisito: 'Organización de Computadoras',
+      },
+      {
+        materia: 'Sistemas Operativos',
+        prerrequisito: 'Introducción a la Programación',
+      },
+      {
+        materia: 'Sistemas Operativos',
+        prerrequisito: 'Organización de Computadoras',
+      },
+      {
+        materia: 'Programación Funcional',
+        prerrequisito: 'Estructuras de Datos',
+      },
       {
         materia: 'Construcción de Interfaces de Usuario',
         prerrequisito: 'Programación con Objetos II',
       },
+      { materia: 'Algoritmos', prerrequisito: 'Programación Funcional' },
       {
         materia: 'Estrategias de Persistencia',
         prerrequisito: 'Bases de Datos',
@@ -520,12 +541,147 @@ module.exports = {
         prerrequisito: 'Programación con Objetos II',
       },
       {
-        materia: 'Redes de Computadoras',
-        prerrequisito: 'Organización de Computadoras',
+        materia: 'Laboratorio de Sistemas Operativos y Redes',
+        prerrequisito: 'Redes de Computadoras',
       },
       {
-        materia: 'Sistemas Operativos',
-        prerrequisito: 'Organización de Computadoras',
+        materia: 'Laboratorio de Sistemas Operativos y Redes',
+        prerrequisito: 'Sistemas Operativos',
+      },
+      { materia: 'Análisis Matemático', prerrequisito: 'Matemática II' },
+      { materia: 'Lógica y Programación', prerrequisito: 'Matemática I' },
+      {
+        materia: 'Lógica y Programación',
+        prerrequisito: 'Introducción a la Programación',
+      },
+      {
+        materia: 'Elementos de Ingeniería de Software',
+        prerrequisito: 'Programación con Objetos II',
+      },
+      {
+        materia: 'Seguridad de la Información',
+        prerrequisito: 'Laboratorio de Sistemas Operativos y Redes',
+      },
+      { materia: 'Matemática III', prerrequisito: 'Análisis Matemático' },
+      {
+        materia: 'Programación Concurrente',
+        prerrequisito: 'Estructuras de Datos',
+      },
+      {
+        materia: 'Ingeniería de Requerimientos',
+        prerrequisito: 'Elementos de Ingeniería de Software',
+      },
+      {
+        materia: 'Desarrollo de Aplicaciones',
+        prerrequisito: 'Construcción de Interfaces de Usuario',
+      },
+      {
+        materia: 'Desarrollo de Aplicaciones',
+        prerrequisito: 'Estrategias de Persistencia',
+      },
+      {
+        materia: 'Desarrollo de Aplicaciones',
+        prerrequisito: 'Elementos de Ingeniería de Software',
+      },
+      {
+        materia: 'Probabilidad y Estadística',
+        prerrequisito: 'Matemática III',
+      },
+      {
+        materia: 'Gestión de Proyectos de Desarrollo de Software',
+        prerrequisito: 'Ingeniería de Requerimientos',
+      },
+      {
+        materia: 'Lenguajes Formales y Autómatas',
+        prerrequisito: 'Lógica y Programación',
+      },
+      {
+        materia: 'Programación con Objetos III',
+        prerrequisito: 'Programación con Objetos II',
+      },
+      {
+        materia: 'Práctica Profesional Supervisada (PPS)',
+        prerrequisito: 'Programación Funcional',
+      },
+      {
+        materia: 'Práctica Profesional Supervisada (PPS)',
+        prerrequisito: 'Laboratorio de Sistemas Operativos y Redes',
+      },
+      {
+        materia: 'Práctica Profesional Supervisada (PPS)',
+        prerrequisito: 'Desarrollo de Aplicaciones',
+      },
+      {
+        materia: 'Práctica Profesional Supervisada (PPS)',
+        prerrequisito: 'Programación Concurrente',
+      },
+      {
+        materia: 'Teoría de la Computación',
+        prerrequisito: 'Lenguajes Formales y Autómatas',
+      },
+      {
+        materia: 'Arquitectura de Software I',
+        prerrequisito: 'Elementos de Ingeniería de Software',
+      },
+      {
+        materia: 'Arquitectura de Software I',
+        prerrequisito: 'Desarrollo de Aplicaciones',
+      },
+      {
+        materia: 'Arquitectura de Software I',
+        prerrequisito: 'Programación Concurrente',
+      },
+      {
+        materia: 'Arquitectura de Software I',
+        prerrequisito: 'Gestión de Proyectos de Desarrollo de Software',
+      },
+      {
+        materia: 'Sistemas Distribuidos y Tiempo Real',
+        prerrequisito: 'Laboratorio de Sistemas Operativos y Redes',
+      },
+      {
+        materia: 'Sistemas Distribuidos y Tiempo Real',
+        prerrequisito: 'Programación Concurrente',
+      },
+      {
+        materia: 'Tesina de Licenciatura',
+        prerrequisito: 'Gestión de Proyectos de Desarrollo de Software',
+      },
+      {
+        materia: 'Tesina de Licenciatura',
+        prerrequisito: 'Lenguajes Formales y Autómatas',
+      },
+      {
+        materia: 'Tesina de Licenciatura',
+        prerrequisito: 'Programación con Objetos III',
+      },
+      {
+        materia: 'Características de Lenguajes de Programación',
+        prerrequisito: 'Lógica y Programación',
+      },
+      {
+        materia: 'Arquitectura de Software II',
+        prerrequisito: 'Arquitectura de Software I',
+      },
+      {
+        materia: 'Arquitectura de Software II',
+        prerrequisito: 'Sistemas Distribuidos y Tiempo Real',
+      },
+      {
+        materia: 'Arquitectura de Computadoras',
+        prerrequisito: 'Laboratorio de Sistemas Operativos y Redes',
+      },
+      {
+        materia: 'Parseo y generación de código',
+        prerrequisito: 'Lenguajes Formales y Autómatas',
+      },
+      {
+        materia: 'Parseo y generación de código',
+        prerrequisito: 'Características de Lenguajes de Programación',
+      },
+      {
+        materia: 'Tecnología y Sociedad',
+        prerrequisito: 'Ejercicio Profesional',
       },
     ]
       .map((c) => ({
@@ -558,6 +714,10 @@ module.exports = {
     // Correlatividades Tecnicatura en Programación
     const correlatividadesTecProgData = [
       {
+        materia: 'Programación estructurada',
+        prerrequisito: 'Introducción a lógica y problemas computacionales',
+      },
+      {
         materia: 'Matemática para Informática II',
         prerrequisito: 'Matemática para informática I',
       },
@@ -566,16 +726,36 @@ module.exports = {
         prerrequisito: 'Inglés I (Tecnicatura)',
       },
       {
-        materia: 'Programación estructurada',
-        prerrequisito: 'Introducción a lógica y problemas computacionales',
+        materia: 'Bases de Datos (Tecnicatura)',
+        prerrequisito: 'Matemática para informática I',
       },
       {
         materia: 'Programación de objetos I (Tecnicatura)',
         prerrequisito: 'Programación estructurada',
       },
       {
+        materia: 'Estructuras de datos (Tecnicatura)',
+        prerrequisito: 'Programación estructurada',
+      },
+      {
         materia: 'Programación de objetos II (Tecnicatura)',
         prerrequisito: 'Programación de objetos I (Tecnicatura)',
+      },
+      {
+        materia: 'Construcción de interfaces de usuario (Tecnicatura)',
+        prerrequisito: 'Programación de objetos II (Tecnicatura)',
+      },
+      {
+        materia: 'Estrategias de persistencia (Tecnicatura)',
+        prerrequisito: 'Bases de Datos (Tecnicatura)',
+      },
+      {
+        materia: 'Estrategias de persistencia (Tecnicatura)',
+        prerrequisito: 'Programación de objetos II (Tecnicatura)',
+      },
+      {
+        materia: 'Elementos de ingeniería de software (Tecnicatura)',
+        prerrequisito: 'Programación de objetos II (Tecnicatura)',
       },
     ]
       .map((c) => ({
@@ -621,6 +801,10 @@ module.exports = {
         prerrequisito: 'Introducción a lógica y problemas computacionales (IA)',
       },
       {
+        materia: 'Bases de datos (IA)',
+        prerrequisito: 'Taller de Programación I',
+      },
+      {
         materia: 'Probabilidad y estadística (IA)',
         prerrequisito: 'Álgebra lineal',
       },
@@ -642,12 +826,48 @@ module.exports = {
         prerrequisito: 'Taller de Programación I',
       },
       {
+        materia: 'Fundamentos de ciencias de datos',
+        prerrequisito: 'Probabilidad y estadística (IA)',
+      },
+      {
+        materia: 'Fundamentos de ciencias de datos',
+        prerrequisito: 'Bases de datos (IA)',
+      },
+      {
         materia: 'Aprendizaje Automático',
         prerrequisito: 'Probabilidad y estadística (IA)',
       },
       {
         materia: 'Aprendizaje Automático',
         prerrequisito: 'Fundamentos de redes neuronales',
+      },
+      {
+        materia: 'Aprendizaje Automático',
+        prerrequisito: 'Taller de Programación II',
+      },
+      {
+        materia: 'Taller de Programación III',
+        prerrequisito: 'Taller de Programación II',
+      },
+      {
+        materia: 'Aprendizaje Automático Avanzado',
+        prerrequisito: 'Aprendizaje Automático',
+      },
+      {
+        materia: 'Procesamiento de Imágenes y Visión por Computadora',
+        prerrequisito: 'Aprendizaje Automático',
+      },
+      {
+        materia: 'Procesamiento de Imágenes y Visión por Computadora',
+        prerrequisito: 'Taller de Programación III',
+      },
+      {
+        materia: 'Proyecto integrador',
+        prerrequisito: 'Aprendizaje Automático Avanzado',
+      },
+      {
+        materia: 'Proyecto integrador',
+        prerrequisito: 'Procesamiento de Imágenes y Visión por Computadora',
       },
     ]
       .map((c) => ({
