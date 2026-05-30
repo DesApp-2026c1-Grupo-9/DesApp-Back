@@ -43,7 +43,7 @@ module.exports = {
       },
       {
         clave: 'M_DENUNCIAS_VERIFICADAS',
-        valor: 3,
+        valor: 1,
         descripcion:
           'Cantidad de denuncias verificadas para suspender automáticamente un material',
       },
