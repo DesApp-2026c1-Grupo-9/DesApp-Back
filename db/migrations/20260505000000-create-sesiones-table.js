@@ -20,13 +20,13 @@ module.exports = {
       },
       creadorId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: 'Usuarios',
           key: 'id',
         },
         onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        onDelete: 'SET NULL',
       },
       tema: {
         type: Sequelize.STRING,
