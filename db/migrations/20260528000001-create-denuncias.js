@@ -24,6 +24,8 @@ module.exports = {
           model: 'Usuarios',
           key: 'id',
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
       },
       motivoId: {
         type: Sequelize.INTEGER,
@@ -49,6 +51,8 @@ module.exports = {
           model: 'Usuarios',
           key: 'id',
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
       },
       fechaModeracion: {
         type: Sequelize.DATE,
