@@ -319,7 +319,6 @@ module.exports = {
       // =========================================================
       // 3. CREAR ALGUNAS NOTIFICACIONES DE MODERACIÓN
       // =========================================================
-      // Verificar si existe la tabla Notificaciones
       const tables = await queryInterface.sequelize.query(
         `SELECT table_name FROM information_schema.tables 
          WHERE table_schema = 'public' AND table_name = 'Notificaciones'`,
@@ -330,47 +329,26 @@ module.exports = {
         const notificaciones = [
           {
             usuarioId: estudiantes[0].id,
-            tipo: 'denuncia_resultado',
-            titulo: 'Denuncia confirmada - Formulario de Física I',
-            mensaje:
+            tipo: 'material_suspendido',
+            titulo:
               'Tu material "Formulario de Física I" ha sido suspendido por infringir derechos de autor.',
             leido: false,
+            materialId: materiales[14].id,
             createdAt: new Date('2025-05-28'),
             updatedAt: new Date('2025-05-28'),
           },
-          {
-            usuarioId: estudiantes[4].id,
-            tipo: 'denuncia_resultado',
-            titulo: 'Denuncia procesada - Resumen de Límites',
-            mensaje:
-              'Tu denuncia sobre "Resumen de Límites y Continuidad" ha sido confirmada por un moderador.',
-            leido: false,
-            createdAt: new Date('2025-05-25'),
-            updatedAt: new Date('2025-05-25'),
-          },
-          {
-            usuarioId: estudiantes[1].id,
-            tipo: 'denuncia_resultado',
-            titulo: 'Denuncia rechazada - Video de Grafos',
-            mensaje:
-              'Tu denuncia sobre "Video: Explicación de Grafos" fue revisada y no se encontraron infracciones.',
-            leido: true,
-            createdAt: new Date('2025-05-18'),
-            updatedAt: new Date('2025-05-18'),
-          },
-          {
-            usuarioId: estudiantes[2].id,
-            tipo: 'denuncia_resultado',
-            titulo: 'Denuncia confirmada - Discord: Comunidad de SO',
-            mensaje:
-              'Tu denuncia sobre "Discord: Comunidad de SO" ha sido confirmada. El material fue suspendido.',
-            leido: false,
-            createdAt: new Date('2025-05-26'),
-            updatedAt: new Date('2025-05-26'),
-          },
         ];
 
-        await queryInterface.bulkInsert('Notificaciones', notificaciones);
+        await queryInterface.bulkInsert(
+          'Notificaciones',
+          notificaciones.map((n) => ({
+            ...n,
+            actorId: null,
+            materiaId: null,
+            sesionId: null,
+            denunciaId: null,
+          }))
+        );
         console.log(`Creadas ${notificaciones.length} notificaciones`);
       }
 
@@ -391,7 +369,7 @@ module.exports = {
       );
       if (tables && tables.length > 0) {
         await queryInterface.bulkDelete('Notificaciones', {
-          tipo: 'denuncia_resultado',
+          tipo: 'material_suspendido',
         });
       }
     } catch (e) {
