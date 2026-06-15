@@ -46,20 +46,20 @@ module.exports = {
           createdAt: hace30Min,
           updatedAt: hace30Min,
         },
-        // Comentarios en la segunda novedad
+        // Comentarios en la segunda novedad (post de Carlos - hechos por sus conexiones)
         {
           contenido: '¡Gracias por compartir! Justo necesitaba esto.',
           novedadId: novedadId2,
-          usuarioId: 3,
+          usuarioId: 2, // Ana García (conexión de Carlos)
           comentarioPadreId: null,
           editedAt: null,
           createdAt: hace30Min,
           updatedAt: hace30Min,
         },
         {
-          contenido: 'Muéstrame dónde está el repo porfa.',
+          contenido: 'Mostrame dónde está el repo porfa.',
           novedadId: novedadId2,
-          usuarioId: 3,
+          usuarioId: 4, // María González (conexión de Carlos)
           comentarioPadreId: null,
           editedAt: new Date(now.getTime() - 10 * 60 * 1000),
           createdAt: hace1Hora,
