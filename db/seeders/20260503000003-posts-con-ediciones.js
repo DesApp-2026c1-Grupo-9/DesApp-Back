@@ -42,7 +42,7 @@ module.exports = {
         tipo: 'posteo',
         titulo: 'Mi primer post editado',
         contenido:
-          'Este post fue editado para mostrar la funcionalidad de edición. ¡Ahora se ve mucho mejor!',
+          'Este post fue editado para mostrar la funcionalidad de edición.',
         imagenUrl: null,
         materiaId: materiaProg?.id,
         visible: true,
