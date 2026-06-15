@@ -31,7 +31,7 @@ module.exports = {
         (c) => c.nombre === 'Tecnicatura en Inteligencia Artificial'
       )?.id;
 
-      // Datos de estudiantes: [nombre, apellido, email, fecha, carreraId]
+      // Datos de estudiantes: [nombre, apellido, email, fecha, carreraId, genero]
       const datos = [
         [
           'Ana',
@@ -39,6 +39,7 @@ module.exports = {
           'ana.garcia@estudiante.unahur.edu.ar',
           '2002-03-15',
           licInfoId,
+          'femenino',
         ],
         [
           'Carlos',
@@ -46,6 +47,7 @@ module.exports = {
           'carlos.rodriguez@estudiante.unahur.edu.ar',
           '2001-07-22',
           licInfoId,
+          'masculino',
         ],
         [
           'María',
@@ -53,6 +55,7 @@ module.exports = {
           'maria.gonzalez@estudiante.unahur.edu.ar',
           '2003-01-10',
           licIAId,
+          'femenino',
         ],
         [
           'Juan',
@@ -60,6 +63,7 @@ module.exports = {
           'juan.martinez@estudiante.unahur.edu.ar',
           '2002-11-05',
           tecProgId,
+          'masculino',
         ],
         [
           'Sofía',
@@ -67,6 +71,7 @@ module.exports = {
           'sofia.lopez@estudiante.unahur.edu.ar',
           '2002-09-18',
           licInfoId,
+          'femenino',
         ],
         [
           'Diego',
@@ -74,6 +79,7 @@ module.exports = {
           'diego.fernandez@estudiante.unahur.edu.ar',
           '2003-04-12',
           licIAId,
+          'masculino',
         ],
         [
           'Valentina',
@@ -81,6 +87,7 @@ module.exports = {
           'valentina.perez@estudiante.unahur.edu.ar',
           '2001-12-08',
           licInfoId,
+          'femenino',
         ],
         [
           'Tomás',
@@ -88,6 +95,7 @@ module.exports = {
           'tomas.silva@estudiante.unahur.edu.ar',
           '2003-06-25',
           licIAId,
+          'masculino',
         ],
         [
           'Camila',
@@ -95,6 +103,7 @@ module.exports = {
           'camila.torres@estudiante.unahur.edu.ar',
           '2002-02-14',
           tecProgId,
+          'femenino',
         ],
         [
           'Nicolás',
@@ -102,6 +111,7 @@ module.exports = {
           'nicolas.morales@estudiante.unahur.edu.ar',
           '2001-10-30',
           licInfoId,
+          'masculino',
         ],
         [
           'Juana',
@@ -109,6 +119,7 @@ module.exports = {
           'juana.azurduy@example.com',
           '1780-07-12',
           licIAId,
+          'femenino',
         ],
         [
           'José',
@@ -116,6 +127,7 @@ module.exports = {
           'jose.artigas@example.com',
           '1764-06-19',
           tecProgId,
+          'masculino',
         ],
         [
           'Simón',
@@ -123,10 +135,11 @@ module.exports = {
           'simon.bolivar@example.com',
           '1783-04-24',
           licInfoId,
+          'masculino',
         ],
       ];
 
-      for (const [nombre, apellido, email, fecha, carreraId] of datos) {
+      for (const [nombre, apellido, email, fecha, carreraId, genero] of datos) {
         if (!carreraId) {
           console.warn(
             `Saltando ${nombre} ${apellido}: no se encontró la carrera correspondiente`
@@ -145,14 +158,14 @@ module.exports = {
           usuarioId = existingUser[0].id;
           // Actualizar usuario existente
           await queryInterface.sequelize.query(
-            'UPDATE "Usuarios" SET nombre = $1, apellido = $2, "fechaNacimiento" = $3, "avatarUrl" = NULL WHERE id = $4',
-            { bind: [nombre, apellido, fecha, usuarioId] }
+            'UPDATE "Usuarios" SET nombre = $1, apellido = $2, "fechaNacimiento" = $3, "avatarUrl" = NULL, genero = $4 WHERE id = $5',
+            { bind: [nombre, apellido, fecha, genero, usuarioId] }
           );
         } else {
           // Crear nuevo usuario
           await queryInterface.sequelize.query(
-            `INSERT INTO "Usuarios" (nombre, apellido, email, "fechaNacimiento", "avatarUrl", password, rol, activo, "createdAt", "updatedAt") 
-               VALUES ($1, $2, $3, $4, NULL, $5, $6, $7, NOW(), NOW())`,
+            `INSERT INTO "Usuarios" (nombre, apellido, email, "fechaNacimiento", "avatarUrl", password, rol, activo, genero, "createdAt", "updatedAt") 
+                VALUES ($1, $2, $3, $4, NULL, $5, $6, $7, $8, NOW(), NOW())`,
             {
               bind: [
                 nombre,
@@ -162,6 +175,7 @@ module.exports = {
                 'password123',
                 'estudiante',
                 true,
+                genero,
               ],
             }
           );

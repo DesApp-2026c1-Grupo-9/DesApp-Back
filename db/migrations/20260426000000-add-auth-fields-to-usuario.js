@@ -65,6 +65,26 @@ module.exports = {
       });
     }
 
+    // Verificar y agregar columna genero si no existe
+    const generoExists = await queryInterface.sequelize.query(
+      `SELECT 1 FROM information_schema.columns 
+       WHERE table_name = 'Usuarios' AND column_name = 'genero';`,
+      { type: queryInterface.sequelize.QueryTypes.SELECT }
+    );
+
+    if (generoExists.length === 0) {
+      await queryInterface.addColumn('Usuarios', 'genero', {
+        type: Sequelize.ENUM(
+          'femenino',
+          'masculino',
+          'no binario',
+          'sin especificar'
+        ),
+        defaultValue: 'sin especificar',
+        allowNull: true,
+      });
+    }
+
     // Actualizar usuarios existentes con valores por defecto
     const users = await queryInterface.sequelize.query(
       'SELECT id FROM "Usuarios";'
@@ -77,6 +97,7 @@ module.exports = {
           password: 'dummyhash',
           rol: 'estudiante',
           activo: true,
+          genero: 'sin especificar',
         },
         { id: user.id }
       );
@@ -88,7 +109,8 @@ module.exports = {
       ALTER COLUMN email SET NOT NULL,
       ALTER COLUMN password SET NOT NULL,
       ALTER COLUMN rol SET NOT NULL,
-      ALTER COLUMN activo SET NOT NULL;
+      ALTER COLUMN activo SET NOT NULL,
+      ALTER COLUMN genero SET NOT NULL;
     `);
 
     // Agregar unique constraint para email si no existe
@@ -109,9 +131,13 @@ module.exports = {
     await queryInterface.sequelize.query(`
       ALTER TABLE "Usuarios" DROP CONSTRAINT IF EXISTS "Usuarios_email_key";
     `);
+    await queryInterface.removeColumn('Usuarios', 'genero');
     await queryInterface.removeColumn('Usuarios', 'activo');
     await queryInterface.removeColumn('Usuarios', 'rol');
     await queryInterface.removeColumn('Usuarios', 'password');
     await queryInterface.removeColumn('Usuarios', 'email');
+    await queryInterface.sequelize.query(
+      'DROP TYPE IF EXISTS "enum_Usuarios_genero";'
+    );
   },
 };
