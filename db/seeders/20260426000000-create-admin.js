@@ -12,6 +12,7 @@ module.exports = {
         password: 'hashed_admin_password',
         rol: 'administrador',
         activo: true,
+        genero: 'sin especificar',
         createdAt: new Date(),
         updatedAt: new Date(),
       },
