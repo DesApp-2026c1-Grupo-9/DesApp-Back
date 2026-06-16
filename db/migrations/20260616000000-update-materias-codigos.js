@@ -39,6 +39,10 @@ const CODIGOS_MATERIAS = {
   'Elementos de ingeniería de software (Tecnicatura)': 'ING_SW101',
   'Probabilidad y Estadística': 'PROB101',
   'Probabilidad y estadística (IA)': 'PROB101',
+  'Materia UNAHUR': 'UNAHUR101',
+  'Materia UNAHUR (IA)': 'UNAHUR101',
+  'Materia UNAHUR I': 'UNAHUR101',
+  'Materia UNAHUR II': 'UNAHUR102',
 };
 
 module.exports = {
