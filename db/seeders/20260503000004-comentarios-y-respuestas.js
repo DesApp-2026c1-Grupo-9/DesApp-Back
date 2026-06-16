@@ -3,35 +3,60 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     const now = new Date();
-    const hace30Min = new Date(now.getTime() - 30 * 60 * 1000);
     const hace1Hora = new Date(now.getTime() - 60 * 60 * 1000);
+    const hace30Min = new Date(now.getTime() - 30 * 60 * 1000);
     const hace15Min = new Date(now.getTime() - 15 * 60 * 1000);
+    const hace10Min = new Date(now.getTime() - 10 * 60 * 1000);
 
-    // Obtener algunos IDs de novedades existentes
-    const novedades = await queryInterface.sequelize.query(
-      'SELECT id FROM "Novedades" ORDER BY id LIMIT 6;',
+    // Obtener IDs de usuarios por email
+    const usuarios = await queryInterface.sequelize.query(
+      `SELECT id, email FROM "Usuarios" WHERE email IN (?, ?, ?) ORDER BY id`,
+      {
+        replacements: [
+          'ana.garcia@estudiante.unahur.edu.ar',
+          'carlos.rodriguez@estudiante.unahur.edu.ar',
+          'maria.gonzalez@estudiante.unahur.edu.ar',
+        ],
+        type: queryInterface.sequelize.QueryTypes.SELECT,
+      }
+    );
+
+    const anaId = usuarios.find((u) => u.email.includes('ana'))?.id;
+    const carlosId = usuarios.find((u) => u.email.includes('carlos'))?.id;
+    const mariaId = usuarios.find((u) => u.email.includes('maria'))?.id;
+
+    // Obtener posts NO automáticos con sus autores
+    const posts = await queryInterface.sequelize.query(
+      `SELECT n.id as "novedadId", n."autorId"
+       FROM "Novedades" n
+       WHERE n."esAutomatica" = false
+       ORDER BY n.id
+       LIMIT 3;`,
       { type: Sequelize.QueryTypes.SELECT }
     );
 
-    if (novedades.length === 0) {
-      console.log('No hay novedades para agregar comentarios');
+    if (posts.length < 3) {
+      console.log('No hay suficientes posts no automáticos');
       return;
     }
 
-    // Usar los primeros IDs disponibles
-    const novedadId1 = novedades[0]?.id;
-    const novedadId2 = novedades[1]?.id || novedades[0]?.id;
-    const novedadId3 = novedades[2]?.id || novedades[0]?.id;
+    // Identificar el post de cada autor
+    const postAna = posts.find((p) => p.autorId === anaId);
+    const postCarlos = posts.find((p) => p.autorId === carlosId);
+    const postMaria = posts.find((p) => p.autorId === mariaId);
 
-    // Insertar comentarios principales
+    // Conexiones que se crearán después (seed 9):
+    //   Ana ↔ Carlos, Ana ↔ María, Carlos ↔ María
+    // Cada post recibe comentarios de las conexiones de su autor
+
     const comentarios = await queryInterface.bulkInsert(
       '"Comentarios"',
       [
-        // Comentarios en la primera novedad
+        // Post de Ana → comentarios de Carlos y María (conexiones de Ana)
         {
           contenido: '¡Qué buen post! Me ayudó mucho.',
-          novedadId: novedadId1,
-          usuarioId: 1,
+          novedadId: postAna?.novedadId,
+          usuarioId: mariaId,
           comentarioPadreId: null,
           editedAt: null,
           createdAt: hace1Hora,
@@ -39,38 +64,38 @@ module.exports = {
         },
         {
           contenido: 'Totalmente de acuerdo, muy útil.',
-          novedadId: novedadId1,
-          usuarioId: 3,
+          novedadId: postAna?.novedadId,
+          usuarioId: carlosId,
+          comentarioPadreId: null,
+          editedAt: null,
+          createdAt: hace15Min,
+          updatedAt: hace15Min,
+        },
+        // Post de Carlos → comentarios de Ana y María (conexiones de Carlos)
+        {
+          contenido: 'Gracias por compartir, justo lo estaba necesitando.',
+          novedadId: postCarlos?.novedadId,
+          usuarioId: mariaId,
           comentarioPadreId: null,
           editedAt: null,
           createdAt: hace30Min,
           updatedAt: hace30Min,
         },
-        // Comentarios en la segunda novedad
         {
-          contenido: '¡Gracias por compartir! Justo necesitaba esto.',
-          novedadId: novedadId2,
-          usuarioId: 3,
+          contenido: 'Mostrame dónde está el repo porfa.',
+          novedadId: postCarlos?.novedadId,
+          usuarioId: anaId,
           comentarioPadreId: null,
-          editedAt: null,
-          createdAt: hace30Min,
-          updatedAt: hace30Min,
-        },
-        {
-          contenido: 'Muéstrame dónde está el repo porfa.',
-          novedadId: novedadId2,
-          usuarioId: 3,
-          comentarioPadreId: null,
-          editedAt: new Date(now.getTime() - 10 * 60 * 1000),
+          editedAt: hace10Min,
           createdAt: hace1Hora,
-          updatedAt: new Date(now.getTime() - 10 * 60 * 1000),
+          updatedAt: hace10Min,
         },
-        // Comentario editado en la tercera novedad
+        // Post de María → comentario de Ana (conexión de María)
         {
           contenido:
             'Creo que sí, yo cursé así el cuatrimestre pasado. Fijate en el plan de estudios.',
-          novedadId: novedadId3,
-          usuarioId: 2,
+          novedadId: postMaria?.novedadId,
+          usuarioId: anaId,
           comentarioPadreId: null,
           editedAt: hace30Min,
           createdAt: hace1Hora,
@@ -80,23 +105,22 @@ module.exports = {
       { returning: true }
     );
 
-    // Buscar el ID del primer comentario para agregar una respuesta
-    const comentarioPadre = await queryInterface.sequelize.query(
-      'SELECT id FROM "Comentarios" WHERE contenido LIKE ? AND "novedadId" = ? LIMIT 1;',
+    // Respuesta al primer comentario del post de Ana (hecho por María)
+    const primerComentario = await queryInterface.sequelize.query(
+      `SELECT id FROM "Comentarios" WHERE "novedadId" = ? ORDER BY id LIMIT 1;`,
       {
-        replacements: ['¡Qué buen post!%', novedadId1],
+        replacements: [postAna?.novedadId],
         type: Sequelize.QueryTypes.SELECT,
       }
     );
 
-    if (comentarioPadre[0]?.id) {
-      // Insertar respuesta
+    if (primerComentario[0]?.id) {
       await queryInterface.bulkInsert('"Comentarios"', [
         {
           contenido: 'Gracias! Me costó pero valió la pena editarlo.',
-          novedadId: novedadId1,
-          usuarioId: 3,
-          comentarioPadreId: comentarioPadre[0].id,
+          novedadId: postAna?.novedadId,
+          usuarioId: anaId,
+          comentarioPadreId: primerComentario[0].id,
           editedAt: null,
           createdAt: hace15Min,
           updatedAt: hace15Min,
@@ -104,14 +128,20 @@ module.exports = {
       ]);
     }
 
-    // Actualizar los contadores de comentarios en TODAS las novedades (incluye comentarios y respuestas)
-    await queryInterface.sequelize.query(`
-      UPDATE "Novedades" n
-      SET "comentariosCount" = (
-        SELECT COUNT(*) FROM "Comentarios" c
-        WHERE c."novedadId" = n.id
+    // Actualizar contadores de comentarios en TODAS las novedades (incluye respuestas)
+    const todasLasNovedades = await queryInterface.sequelize.query(
+      `SELECT id FROM "Novedades";`,
+      { type: Sequelize.QueryTypes.SELECT }
+    );
+
+    for (const n of todasLasNovedades) {
+      await queryInterface.sequelize.query(
+        `UPDATE "Novedades" SET "comentariosCount" = (
+           SELECT COUNT(*) FROM "Comentarios" WHERE "novedadId" = ?
+         ) WHERE id = ?;`,
+        { replacements: [n.id, n.id] }
       );
-    `);
+    }
   },
 
   down: async (queryInterface, Sequelize) => {
