@@ -1,5 +1,38 @@
 'use strict';
 
+// Mapeo de nombres de materias a códigos consistentes
+// Las materias equivalentes en diferentes carreras tienen el MISMO código
+const CODIGOS_MATERIAS = {
+  'Inglés I': 'ING101',
+  'Inglés I (IA)': 'ING101',
+  'Inglés II': 'ING102',
+  'Inglés II (IA)': 'ING102',
+  'Bases de Datos': 'BD101',
+  'Bases de datos (IA)': 'BD101',
+  'Programación con Objetos I': 'POO101',
+  'Programación con Objetos II': 'POO102',
+  'Programación con Objetos II': 'POO102',
+  'Programación Estructurada': 'PROG101',
+  'Matemática I': 'MAT101',
+  'Matemática para informática I': 'MAT101',
+  'Matemática para informática I (IA)': 'MAT101',
+  'Matemática II': 'MAT102',
+  'Matemática para Informática II': 'MAT102',
+  'Matemática III': 'MAT103',
+  'Introducción a la Programación': 'PROG100',
+  'Introducción a lógica y problemas computacionales': 'LOG101',
+  'Introducción a lógica y problemas computacionales (IA)': 'LOG101',
+  'Sistemas Operativos': 'SO101',
+  'Redes de Computadoras': 'RED101',
+  'Organización de Computadoras': 'ORG101',
+  'Construcción de Interfaces de Usuario': 'UI101',
+  'Estructuras de Datos': 'ED101',
+  'Estrategias de Persistencia': 'PERS101',
+  'Elementos de Ingeniería de Software': 'ING_SW101',
+  'Probabilidad y Estadística': 'PROB101',
+  'Probabilidad y estadística (IA)': 'PROB101',
+};
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     // Definir carreras
@@ -229,6 +262,7 @@ module.exports = {
           {
             nombre: data.nombre,
             tipo: data.tipo,
+            codigo: CODIGOS_MATERIAS[data.nombre] || null,
             createdAt: new Date(),
             updatedAt: new Date(),
           },
@@ -273,47 +307,47 @@ module.exports = {
         anio: 1,
         tipo: 'cuatrimestral',
       },
-      { nombre: 'Inglés I (Tecnicatura)', anio: 1, tipo: 'cuatrimestral' },
+      { nombre: 'Inglés I', anio: 1, tipo: 'cuatrimestral' },
       {
-        nombre: 'Bases de Datos (Tecnicatura)',
+        nombre: 'Bases de Datos',
         anio: 2,
         tipo: 'cuatrimestral',
       },
       {
-        nombre: 'Programación de objetos I (Tecnicatura)',
+        nombre: 'Programación con Objetos I',
         anio: 2,
         tipo: 'cuatrimestral',
       },
       {
-        nombre: 'Estructuras de datos (Tecnicatura)',
+        nombre: 'Estructuras de Datos',
         anio: 2,
         tipo: 'cuatrimestral',
       },
       {
-        nombre: 'Materia UNAHUR (Tecnicatura)',
+        nombre: 'Materia UNAHUR',
         anio: 2,
         tipo: 'cuatrimestral',
       },
       {
-        nombre: 'Programación de objetos II (Tecnicatura)',
+        nombre: 'Programación con Objetos II',
         anio: 2,
         tipo: 'cuatrimestral',
       },
       { nombre: 'Electiva I', anio: 2, tipo: 'cuatrimestral' },
       { nombre: 'Electiva II', anio: 2, tipo: 'cuatrimestral' },
-      { nombre: 'Inglés II (Tecnicatura)', anio: 2, tipo: 'cuatrimestral' },
+      { nombre: 'Inglés II', anio: 2, tipo: 'cuatrimestral' },
       {
-        nombre: 'Construcción de interfaces de usuario (Tecnicatura)',
+        nombre: 'Construcción de Interfaces de Usuario',
         anio: 3,
         tipo: 'cuatrimestral',
       },
       {
-        nombre: 'Estrategias de persistencia (Tecnicatura)',
+        nombre: 'Estrategias de Persistencia',
         anio: 3,
         tipo: 'cuatrimestral',
       },
       {
-        nombre: 'Elementos de ingeniería de software (Tecnicatura)',
+        nombre: 'Elementos de Ingeniería de Software',
         anio: 3,
         tipo: 'cuatrimestral',
       },
@@ -336,6 +370,7 @@ module.exports = {
           {
             nombre: data.nombre,
             tipo: data.tipo,
+            codigo: CODIGOS_MATERIAS[data.nombre] || null,
             createdAt: new Date(),
             updatedAt: new Date(),
           },
@@ -431,6 +466,7 @@ module.exports = {
           {
             nombre: data.nombre,
             tipo: data.tipo,
+            codigo: CODIGOS_MATERIAS[data.nombre] || null,
             createdAt: new Date(),
             updatedAt: new Date(),
           },
@@ -732,40 +768,40 @@ module.exports = {
         prerrequisito: 'Matemática para informática I',
       },
       {
-        materia: 'Inglés II (Tecnicatura)',
-        prerrequisito: 'Inglés I (Tecnicatura)',
+        materia: 'Inglés II',
+        prerrequisito: 'Inglés I',
       },
       {
-        materia: 'Bases de Datos (Tecnicatura)',
+        materia: 'Bases de Datos',
         prerrequisito: 'Matemática para informática I',
       },
       {
-        materia: 'Programación de objetos I (Tecnicatura)',
+        materia: 'Programación con Objetos I',
         prerrequisito: 'Programación estructurada',
       },
       {
-        materia: 'Estructuras de datos (Tecnicatura)',
+        materia: 'Estructuras de Datos',
         prerrequisito: 'Programación estructurada',
       },
       {
-        materia: 'Programación de objetos II (Tecnicatura)',
-        prerrequisito: 'Programación de objetos I (Tecnicatura)',
+        materia: 'Programación con Objetos II',
+        prerrequisito: 'Programación con Objetos I',
       },
       {
-        materia: 'Construcción de interfaces de usuario (Tecnicatura)',
-        prerrequisito: 'Programación de objetos II (Tecnicatura)',
+        materia: 'Construcción de Interfaces de Usuario',
+        prerrequisito: 'Programación con Objetos II',
       },
       {
-        materia: 'Estrategias de persistencia (Tecnicatura)',
-        prerrequisito: 'Bases de Datos (Tecnicatura)',
+        materia: 'Estrategias de Persistencia',
+        prerrequisito: 'Bases de Datos',
       },
       {
-        materia: 'Estrategias de persistencia (Tecnicatura)',
-        prerrequisito: 'Programación de objetos II (Tecnicatura)',
+        materia: 'Estrategias de Persistencia',
+        prerrequisito: 'Programación con Objetos II',
       },
       {
-        materia: 'Elementos de ingeniería de software (Tecnicatura)',
-        prerrequisito: 'Programación de objetos II (Tecnicatura)',
+        materia: 'Elementos de Ingeniería de Software',
+        prerrequisito: 'Programación con Objetos II',
       },
     ]
       .map((c) => ({

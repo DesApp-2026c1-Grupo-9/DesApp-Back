@@ -99,30 +99,15 @@ module.exports = {
         'Introducción a lógica y problemas computacionales',
       ],
       ['Matemática para Informática II', 'Matemática para informática I'],
-      ['Inglés II (Tecnicatura)', 'Inglés I (Tecnicatura)'],
-      ['Bases de Datos (Tecnicatura)', 'Matemática para informática I'],
-      ['Programación de objetos I (Tecnicatura)', 'Programación estructurada'],
-      ['Estructuras de datos (Tecnicatura)', 'Programación estructurada'],
-      [
-        'Programación de objetos II (Tecnicatura)',
-        'Programación de objetos I (Tecnicatura)',
-      ],
-      [
-        'Construcción de interfaces de usuario (Tecnicatura)',
-        'Programación de objetos II (Tecnicatura)',
-      ],
-      [
-        'Estrategias de persistencia (Tecnicatura)',
-        'Bases de Datos (Tecnicatura)',
-      ],
-      [
-        'Estrategias de persistencia (Tecnicatura)',
-        'Programación de objetos II (Tecnicatura)',
-      ],
-      [
-        'Elementos de ingeniería de software (Tecnicatura)',
-        'Programación de objetos II (Tecnicatura)',
-      ],
+      ['Inglés II', 'Inglés I'],
+      ['Bases de Datos', 'Matemática para informática I'],
+      ['Programación con Objetos I', 'Programación estructurada'],
+      ['Estructuras de Datos', 'Programación estructurada'],
+      ['Programación con Objetos II', 'Programación con Objetos I'],
+      ['Construcción de Interfaces de Usuario', 'Programación con Objetos II'],
+      ['Estrategias de Persistencia', 'Bases de Datos'],
+      ['Estrategias de Persistencia', 'Programación con Objetos II'],
+      ['Elementos de Ingeniería de Software', 'Programación con Objetos II'],
 
       // Tecnicatura en IA
       ['Álgebra lineal', 'Matemática para informática I (IA)'],
