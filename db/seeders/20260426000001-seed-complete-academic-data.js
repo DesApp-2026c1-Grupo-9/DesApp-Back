@@ -11,7 +11,6 @@ const CODIGOS_MATERIAS = {
   'Bases de datos (IA)': 'BD101',
   'Programación con Objetos I': 'POO101',
   'Programación con Objetos II': 'POO102',
-  'Programación con Objetos II': 'POO102',
   'Programación Estructurada': 'PROG101',
   'Matemática I': 'MAT101',
   'Matemática para informática I': 'MAT101',
