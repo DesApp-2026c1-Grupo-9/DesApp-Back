@@ -1,8 +1,12 @@
 'use strict';
+const bcrypt = require('bcryptjs');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     try {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash('password123', salt);
+
       // Obtener carreras con sus planes de estudio vigente
       const carreras = await queryInterface.sequelize.query(
         `SELECT c.id, c.nombre, p.id as "planId" 
@@ -172,7 +176,7 @@ module.exports = {
                 apellido,
                 email,
                 fecha,
-                'password123',
+                hashedPassword,
                 'estudiante',
                 true,
                 genero,
