@@ -147,7 +147,7 @@ module.exports = {
           'john.desapp@estudiantes.unahur.edu.ar',
           null,
           null,
-          null,
+          'sin especificar',
         ],
       ];
 
