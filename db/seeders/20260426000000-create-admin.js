@@ -1,7 +1,11 @@
 'use strict';
+const bcrypt = require('bcryptjs');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash('admin123', salt);
+
     await queryInterface.bulkInsert('Usuarios', [
       {
         nombre: 'Admin',
@@ -9,7 +13,7 @@ module.exports = {
         fechaNacimiento: '1980-01-01',
         avatarUrl: 'https://example.com/admin.jpg',
         email: 'admin@desapp.com',
-        password: 'hashed_admin_password',
+        password: hashedPassword,
         rol: 'administrador',
         activo: true,
         genero: 'sin especificar',

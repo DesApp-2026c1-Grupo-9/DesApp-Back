@@ -1,8 +1,12 @@
 'use strict';
+const bcrypt = require('bcryptjs');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     try {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash('password123', salt);
+
       // Obtener carreras con sus planes de estudio vigente
       const carreras = await queryInterface.sequelize.query(
         `SELECT c.id, c.nombre, p.id as "planId" 
@@ -137,16 +141,17 @@ module.exports = {
           licInfoId,
           'masculino',
         ],
+        [
+          'John',
+          'Desapp',
+          'john.desapp@estudiantes.unahur.edu.ar',
+          null,
+          null,
+          'sin especificar',
+        ],
       ];
 
       for (const [nombre, apellido, email, fecha, carreraId, genero] of datos) {
-        if (!carreraId) {
-          console.warn(
-            `Saltando ${nombre} ${apellido}: no se encontró la carrera correspondiente`
-          );
-          continue;
-        }
-
         // Verificar si el usuario ya existe
         let usuarioId;
         const existingUser = await queryInterface.sequelize.query(
@@ -158,8 +163,13 @@ module.exports = {
           usuarioId = existingUser[0].id;
           // Actualizar usuario existente
           await queryInterface.sequelize.query(
-            'UPDATE "Usuarios" SET nombre = $1, apellido = $2, "fechaNacimiento" = $3, "avatarUrl" = NULL, genero = $4 WHERE id = $5',
-            { bind: [nombre, apellido, fecha, genero, usuarioId] }
+            'UPDATE "Usuarios" SET nombre = $1, apellido = $2, "fechaNacimiento" = $3, "avatarUrl" = NULL' +
+              (genero ? ', genero = $4' : '') +
+              ' WHERE id = $' +
+              (genero ? '5' : '4'),
+            genero
+              ? { bind: [nombre, apellido, fecha, genero, usuarioId] }
+              : { bind: [nombre, apellido, fecha, usuarioId] }
           );
         } else {
           // Crear nuevo usuario
@@ -172,7 +182,7 @@ module.exports = {
                 apellido,
                 email,
                 fecha,
-                'password123',
+                hashedPassword,
                 'estudiante',
                 true,
                 genero,
@@ -186,56 +196,58 @@ module.exports = {
           usuarioId = newUser[0]?.id;
         }
 
-        if (usuarioId) {
-          // Verificar si el estudiante ya existe
-          const existingEstudiante = await queryInterface.sequelize.query(
-            'SELECT id FROM "Estudiantes" WHERE "usuarioId" = $1 LIMIT 1',
-            {
-              bind: [usuarioId],
-              type: queryInterface.sequelize.QueryTypes.SELECT,
-            }
-          );
+        if (!usuarioId) continue;
 
-          if (!existingEstudiante || existingEstudiante.length === 0) {
-            await queryInterface.sequelize.query(
-              `INSERT INTO "Estudiantes" ("usuarioId", "createdAt", "updatedAt") 
-                 VALUES ($1, NOW(), NOW())`,
-              {
-                bind: [usuarioId],
-              }
-            );
+        // Verificar si el estudiante ya existe
+        const existingEstudiante = await queryInterface.sequelize.query(
+          'SELECT id FROM "Estudiantes" WHERE "usuarioId" = $1 LIMIT 1',
+          {
+            bind: [usuarioId],
+            type: queryInterface.sequelize.QueryTypes.SELECT,
           }
+        );
 
-          // Obtener el ID del estudiante
-          const estudiante = await queryInterface.sequelize.query(
-            'SELECT id FROM "Estudiantes" WHERE "usuarioId" = $1 LIMIT 1',
+        if (!existingEstudiante || existingEstudiante.length === 0) {
+          await queryInterface.sequelize.query(
+            `INSERT INTO "Estudiantes" ("usuarioId", "createdAt", "updatedAt") 
+                 VALUES ($1, NOW(), NOW())`,
             {
               bind: [usuarioId],
+            }
+          );
+        }
+
+        if (!carreraId) continue;
+
+        // Obtener el ID del estudiante
+        const estudiante = await queryInterface.sequelize.query(
+          'SELECT id FROM "Estudiantes" WHERE "usuarioId" = $1 LIMIT 1',
+          {
+            bind: [usuarioId],
+            type: queryInterface.sequelize.QueryTypes.SELECT,
+          }
+        );
+        const estudianteId = estudiante[0]?.id;
+
+        if (estudianteId) {
+          // Asignar carrera (idempotente - verificar si ya existe la relación)
+          const existingRelacion = await queryInterface.sequelize.query(
+            'SELECT 1 FROM "EstudianteCarreras" WHERE "estudianteId" = $1 AND "carreraId" = $2 LIMIT 1',
+            {
+              bind: [estudianteId, carreraId],
               type: queryInterface.sequelize.QueryTypes.SELECT,
             }
           );
-          const estudianteId = estudiante[0]?.id;
 
-          if (estudianteId) {
-            // Asignar carrera (idempotente - verificar si ya existe la relación)
-            const existingRelacion = await queryInterface.sequelize.query(
-              'SELECT 1 FROM "EstudianteCarreras" WHERE "estudianteId" = $1 AND "carreraId" = $2 LIMIT 1',
+          if (!existingRelacion || existingRelacion.length === 0) {
+            await queryInterface.sequelize.query(
+              `INSERT INTO "EstudianteCarreras" ("estudianteId", "carreraId", "createdAt", "updatedAt") 
+                   VALUES ($1, $2, NOW(), NOW())`,
               {
                 bind: [estudianteId, carreraId],
-                type: queryInterface.sequelize.QueryTypes.SELECT,
+                type: queryInterface.sequelize.QueryTypes.INSERT,
               }
             );
-
-            if (!existingRelacion || existingRelacion.length === 0) {
-              await queryInterface.sequelize.query(
-                `INSERT INTO "EstudianteCarreras" ("estudianteId", "carreraId", "createdAt", "updatedAt") 
-                   VALUES ($1, $2, NOW(), NOW())`,
-                {
-                  bind: [estudianteId, carreraId],
-                  type: queryInterface.sequelize.QueryTypes.INSERT,
-                }
-              );
-            }
           }
         }
       }
