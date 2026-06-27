@@ -15,9 +15,9 @@ module.exports = {
         );
       }
 
-      // Obtener usuarios estudiantes
+      // Obtener estudiantes
       const estudiantes = await queryInterface.sequelize.query(
-        'SELECT id, nombre, apellido FROM "Usuarios" WHERE rol = \'estudiante\' ORDER BY id',
+        'SELECT e.id, u.nombre, u.apellido FROM "Estudiantes" e INNER JOIN "Usuarios" u ON e."usuarioId" = u.id WHERE u.rol = \'estudiante\' ORDER BY e.id',
         { type: queryInterface.sequelize.QueryTypes.SELECT }
       );
 
@@ -29,7 +29,7 @@ module.exports = {
 
       // Obtener administrador
       const admin = await queryInterface.sequelize.query(
-        'SELECT id FROM "Usuarios" WHERE rol = \'administrador\' LIMIT 1',
+        'SELECT a.id FROM "Administradores" a INNER JOIN "Usuarios" u ON a."usuarioId" = u.id WHERE u.rol = \'administrador\' LIMIT 1',
         { type: queryInterface.sequelize.QueryTypes.SELECT }
       );
 

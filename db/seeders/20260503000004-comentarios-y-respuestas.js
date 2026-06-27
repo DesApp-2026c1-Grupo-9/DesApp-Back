@@ -8,9 +8,9 @@ module.exports = {
     const hace15Min = new Date(now.getTime() - 15 * 60 * 1000);
     const hace10Min = new Date(now.getTime() - 10 * 60 * 1000);
 
-    // Obtener IDs de usuarios por email
+    // Obtener IDs de estudiantes por email
     const usuarios = await queryInterface.sequelize.query(
-      `SELECT id, email FROM "Usuarios" WHERE email IN (?, ?, ?) ORDER BY id`,
+      `SELECT e.id, u.email FROM "Estudiantes" e INNER JOIN "Usuarios" u ON e."usuarioId" = u.id WHERE u.email IN (?, ?, ?) ORDER BY e.id`,
       {
         replacements: [
           'ana.garcia@estudiante.unahur.edu.ar',
@@ -27,7 +27,7 @@ module.exports = {
 
     // Obtener posts NO automáticos con sus autores
     const posts = await queryInterface.sequelize.query(
-      `SELECT n.id as "novedadId", n."autorId"
+      `SELECT n.id as "novedadId", n."estudianteId"
        FROM "Novedades" n
        WHERE n."esAutomatica" = false
        ORDER BY n.id
@@ -41,9 +41,9 @@ module.exports = {
     }
 
     // Identificar el post de cada autor
-    const postAna = posts.find((p) => p.autorId === anaId);
-    const postCarlos = posts.find((p) => p.autorId === carlosId);
-    const postMaria = posts.find((p) => p.autorId === mariaId);
+    const postAna = posts.find((p) => p.estudianteId === anaId);
+    const postCarlos = posts.find((p) => p.estudianteId === carlosId);
+    const postMaria = posts.find((p) => p.estudianteId === mariaId);
 
     // Conexiones que se crearán después (seed 9):
     //   Ana ↔ Carlos, Ana ↔ María, Carlos ↔ María
