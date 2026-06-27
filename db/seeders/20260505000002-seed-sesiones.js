@@ -13,9 +13,9 @@ module.exports = {
         throw new Error('No hay materias. Ejecute primero el seed de datos académicos.');
       }
 
-      // Obtener usuarios estudiantes existentes
+      // Obtener estudiantes existentes
       const usuarios = await queryInterface.sequelize.query(
-        'SELECT id, nombre, apellido, email FROM "Usuarios" WHERE rol = \'estudiante\' ORDER BY id',
+        'SELECT e.id, u.nombre, u.apellido, u.email FROM "Estudiantes" e INNER JOIN "Usuarios" u ON e."usuarioId" = u.id WHERE u.rol = \'estudiante\' ORDER BY e.id',
         { type: queryInterface.sequelize.QueryTypes.SELECT }
       );
 

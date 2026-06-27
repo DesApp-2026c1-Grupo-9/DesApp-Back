@@ -7,9 +7,9 @@ module.exports = {
     const hace30Min = new Date(now.getTime() - 30 * 60 * 1000);
     const hace15Min = new Date(now.getTime() - 15 * 60 * 1000);
 
-    // Obtener IDs de usuarios por email
+    // Obtener IDs de estudiantes por email
     const usuarios = await queryInterface.sequelize.query(
-      `SELECT id, email FROM "Usuarios" WHERE email IN (?, ?, ?) ORDER BY id`,
+      `SELECT e.id, u.email FROM "Estudiantes" e INNER JOIN "Usuarios" u ON e."usuarioId" = u.id WHERE u.email IN (?, ?, ?) ORDER BY e.id`,
       {
         replacements: [
           'ana.garcia@estudiante.unahur.edu.ar',
@@ -26,7 +26,7 @@ module.exports = {
 
     // Obtener posts NO automáticos que NO tienen ningún comentario
     const postsSinComentarios = await queryInterface.sequelize.query(
-      `SELECT n.id as "novedadId", n."autorId"
+      `SELECT n.id as "novedadId", n."estudianteId"
        FROM "Novedades" n
        WHERE n."esAutomatica" = false
          AND NOT EXISTS (
@@ -48,11 +48,11 @@ module.exports = {
 
       // Asignar un comentarista que sea conexión del autor
       // Conexiones aceptadas: Ana↔Carlos, Ana↔María, Carlos↔María
-      if (post.autorId === anaId) {
+      if (post.estudianteId === anaId) {
         usuarioIdComentario = mariaId;
-      } else if (post.autorId === carlosId) {
+      } else if (post.estudianteId === carlosId) {
         usuarioIdComentario = anaId;
-      } else if (post.autorId === mariaId) {
+      } else if (post.estudianteId === mariaId) {
         usuarioIdComentario = anaId;
       }
 
