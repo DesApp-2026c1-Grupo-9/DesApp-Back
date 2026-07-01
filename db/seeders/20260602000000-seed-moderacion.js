@@ -316,42 +316,6 @@ module.exports = {
         `Suspendidos ${materialesSuspendidos.length} materiales automáticamente`
       );
 
-      // =========================================================
-      // 3. CREAR ALGUNAS NOTIFICACIONES DE MODERACIÓN
-      // =========================================================
-      const tables = await queryInterface.sequelize.query(
-        `SELECT table_name FROM information_schema.tables 
-         WHERE table_schema = 'public' AND table_name = 'Notificaciones'`,
-        { type: queryInterface.sequelize.QueryTypes.SELECT }
-      );
-
-      if (tables && tables.length > 0) {
-        const notificaciones = [
-          {
-            usuarioId: estudiantes[0].id,
-            tipo: 'material_suspendido',
-            titulo:
-              'Tu material "Formulario de Física I" ha sido suspendido por infringir derechos de autor.',
-            leido: false,
-            materialId: materiales[14].id,
-            createdAt: new Date('2025-05-28'),
-            updatedAt: new Date('2025-05-28'),
-          },
-        ];
-
-        await queryInterface.bulkInsert(
-          'Notificaciones',
-          notificaciones.map((n) => ({
-            ...n,
-            actorId: null,
-            materiaId: null,
-            sesionId: null,
-            denunciaId: null,
-          }))
-        );
-        console.log(`Creadas ${notificaciones.length} notificaciones`);
-      }
-
       console.log('Seed de moderación completado exitosamente');
     } catch (error) {
       console.error('Error in seed-moderacion:', error.message);
@@ -360,21 +324,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    // Limpiar notificaciones de moderación si existen
-    try {
-      const tables = await queryInterface.sequelize.query(
-        `SELECT table_name FROM information_schema.tables 
-         WHERE table_schema = 'public' AND table_name = 'Notificaciones'`,
-        { type: queryInterface.sequelize.QueryTypes.SELECT }
-      );
-      if (tables && tables.length > 0) {
-        await queryInterface.bulkDelete('Notificaciones', {
-          tipo: 'material_suspendido',
-        });
-      }
-    } catch (e) {
-      // ignore
-    }
     await queryInterface.bulkDelete('Denuncias', null, {});
     await queryInterface.sequelize.query(
       'UPDATE "Materiales" SET suspendido = false, "suspendidoEn" = NULL WHERE suspendido = true'
