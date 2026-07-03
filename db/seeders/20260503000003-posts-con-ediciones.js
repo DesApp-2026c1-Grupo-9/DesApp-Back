@@ -20,9 +20,9 @@ module.exports = {
     const materiaMat =
       materias.find((m) => m.nombre.includes('Matemática')) || materias[1];
 
-    // Obtener IDs de usuarios por email
+    // Obtener IDs de estudiantes por email
     const usuarios = await queryInterface.sequelize.query(
-      `SELECT id, email FROM "Usuarios" WHERE email IN (?, ?, ?) ORDER BY id`,
+      `SELECT e.id, u.email FROM "Estudiantes" e INNER JOIN "Usuarios" u ON e."usuarioId" = u.id WHERE u.email IN (?, ?, ?) ORDER BY e.id`,
       {
         replacements: [
           'ana.garcia@estudiante.unahur.edu.ar',
@@ -49,7 +49,7 @@ module.exports = {
         esAutomatica: false,
         likesCount: 0,
         comentariosCount: 0,
-        autorId: anaId, // Ana García
+        estudianteId: anaId, // Ana García
         editedAt: haceUnaHora,
         createdAt: haceDosDias,
         updatedAt: haceUnaHora,
@@ -65,7 +65,7 @@ module.exports = {
         esAutomatica: false,
         likesCount: 0,
         comentariosCount: 0,
-        autorId: carlosId, // Carlos Rodríguez
+        estudianteId: carlosId, // Carlos Rodríguez
         editedAt: null,
         createdAt: haceUnaHora,
         updatedAt: haceUnaHora,
@@ -81,7 +81,7 @@ module.exports = {
         esAutomatica: false,
         likesCount: 0,
         comentariosCount: 0,
-        autorId: mariaId, // María González
+        estudianteId: mariaId, // María González
         editedAt: null,
         createdAt: now,
         updatedAt: now,

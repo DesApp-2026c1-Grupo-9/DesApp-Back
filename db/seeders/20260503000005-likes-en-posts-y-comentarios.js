@@ -6,7 +6,7 @@ module.exports = {
 
     // Obtener IDs de novedades y comentarios
     const novedades = await queryInterface.sequelize.query(
-      'SELECT id, "autorId" FROM "Novedades" ORDER BY id DESC LIMIT 10;',
+      'SELECT id, "estudianteId" FROM "Novedades" ORDER BY id DESC LIMIT 10;',
       { type: Sequelize.QueryTypes.SELECT }
     );
 
@@ -20,15 +20,27 @@ module.exports = {
       return;
     }
 
+    // Obtener IDs reales de Estudiantes
+    const estudiantes = await queryInterface.sequelize.query(
+      'SELECT id FROM "Estudiantes" ORDER BY id LIMIT 3;',
+      { type: Sequelize.QueryTypes.SELECT }
+    );
+    const estudianteIds = estudiantes.map((e) => e.id);
+
+    if (estudianteIds.length === 0) {
+      console.log('No hay estudiantes para agregar likes');
+      return;
+    }
+
     // Likes en posts (solo agregar si no existen)
     for (const novedad of novedades) {
-      for (const usuarioId of [1, 2, 3]) {
-        if (usuarioId !== novedad.autorId) {
+      for (const estudianteId of estudianteIds) {
+        if (estudianteId !== novedad.estudianteId) {
           // Verificar si ya existe el like
           const existing = await queryInterface.sequelize.query(
             'SELECT 1 FROM "Likes" WHERE "novedadId" = ? AND "usuarioId" = ? LIMIT 1;',
             {
-              replacements: [novedad.id, usuarioId],
+              replacements: [novedad.id, estudianteId],
               type: Sequelize.QueryTypes.SELECT,
             }
           );
@@ -37,7 +49,7 @@ module.exports = {
             await queryInterface.bulkInsert('"Likes"', [
               {
                 novedadId: novedad.id,
-                usuarioId: usuarioId,
+                usuarioId: estudianteId,
                 createdAt: now,
                 updatedAt: now,
               },
@@ -50,13 +62,13 @@ module.exports = {
     // Likes en comentarios
     if (comentarios && comentarios.length > 0) {
       for (const comentario of comentarios) {
-        for (const usuarioId of [1, 2, 3]) {
-          if (usuarioId !== comentario.usuarioId) {
+        for (const estudianteId of estudianteIds) {
+          if (estudianteId !== comentario.usuarioId) {
             // Verificar si ya existe el like
             const existing = await queryInterface.sequelize.query(
               'SELECT 1 FROM "ComentarioLikes" WHERE "comentarioId" = ? AND "usuarioId" = ? LIMIT 1;',
               {
-                replacements: [comentario.id, usuarioId],
+                replacements: [comentario.id, estudianteId],
                 type: Sequelize.QueryTypes.SELECT,
               }
             );
@@ -65,7 +77,7 @@ module.exports = {
               await queryInterface.bulkInsert('"ComentarioLikes"', [
                 {
                   comentarioId: comentario.id,
-                  usuarioId: usuarioId,
+                  usuarioId: estudianteId,
                   createdAt: now,
                   updatedAt: now,
                 },

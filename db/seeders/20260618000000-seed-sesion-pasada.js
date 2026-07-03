@@ -15,7 +15,7 @@ module.exports = {
       }
 
       const usuarios = await queryInterface.sequelize.query(
-        'SELECT id, nombre, apellido FROM "Usuarios" WHERE rol = \'estudiante\' ORDER BY id LIMIT 1',
+        'SELECT e.id, u.nombre, u.apellido FROM "Estudiantes" e INNER JOIN "Usuarios" u ON e."usuarioId" = u.id WHERE u.rol = \'estudiante\' ORDER BY e.id LIMIT 1',
         { type: queryInterface.sequelize.QueryTypes.SELECT }
       );
 

@@ -15,9 +15,9 @@ module.exports = {
         );
       }
 
-      // Obtener usuarios estudiantes existentes
+      // Obtener estudiantes existentes
       const usuarios = await queryInterface.sequelize.query(
-        'SELECT id, nombre, apellido FROM "Usuarios" WHERE rol = \'estudiante\' ORDER BY id',
+        'SELECT e.id, u.nombre, u.apellido FROM "Estudiantes" e INNER JOIN "Usuarios" u ON e."usuarioId" = u.id WHERE u.rol = \'estudiante\' ORDER BY e.id',
         { type: queryInterface.sequelize.QueryTypes.SELECT }
       );
 
@@ -99,7 +99,7 @@ module.exports = {
           tipoLink: 'drive',
           discordInfo: null,
           materiaId: materias[0]?.id || 1,
-          creadorId: usuarios[0]?.id || 1,
+          estudianteId: usuarios[0]?.id || 1,
           fecha: new Date('2025-03-15'),
           tagIds: getTagIds(['parcial', 'teoría', 'resumen']),
         },
@@ -112,7 +112,7 @@ module.exports = {
           tipoLink: 'drive',
           discordInfo: null,
           materiaId: materias[0]?.id || 1,
-          creadorId: usuarios[1]?.id || 2,
+          estudianteId: usuarios[1]?.id || 2,
           fecha: new Date('2025-04-10'),
           tagIds: getTagIds(['tp', 'práctica', 'resueltos']),
         },
@@ -125,7 +125,7 @@ module.exports = {
           tipoLink: 'youtube',
           discordInfo: null,
           materiaId: materias[0]?.id || 1,
-          creadorId: usuarios[2]?.id || 3,
+          estudianteId: usuarios[2]?.id || 3,
           fecha: new Date('2025-05-01'),
           tagIds: getTagIds(['video', 'explicación', 'práctica']),
         },
@@ -138,7 +138,7 @@ module.exports = {
           tipoLink: 'discord',
           discordInfo: { servidor: 'Algoritmos UNH', canal: 'general' },
           materiaId: materias[0]?.id || 1,
-          creadorId: usuarios[3]?.id || 4,
+          estudianteId: usuarios[3]?.id || 4,
           fecha: new Date('2025-02-20'),
           tagIds: getTagIds(['grupo-estudio', 'discord']),
         },
@@ -151,7 +151,7 @@ module.exports = {
           tipoLink: 'github',
           discordInfo: null,
           materiaId: materias[0]?.id || 1,
-          creadorId: usuarios[0]?.id || 1,
+          estudianteId: usuarios[0]?.id || 1,
           fecha: new Date('2025-03-25'),
           tagIds: getTagIds(['proyecto', 'código', 'práctica']),
         },
@@ -166,7 +166,7 @@ module.exports = {
           tipoLink: 'youtube',
           discordInfo: null,
           materiaId: materias[1]?.id || 2,
-          creadorId: usuarios[1]?.id || 2,
+          estudianteId: usuarios[1]?.id || 2,
           fecha: new Date('2025-02-10'),
           tagIds: getTagIds(['video', 'teoría', 'explicación']),
         },
@@ -179,7 +179,7 @@ module.exports = {
           tipoLink: 'drive',
           discordInfo: null,
           materiaId: materias[1]?.id || 2,
-          creadorId: usuarios[2]?.id || 3,
+          estudianteId: usuarios[2]?.id || 3,
           fecha: new Date('2025-03-05'),
           tagIds: getTagIds(['parcial', 'teoría', 'resumen']),
         },
@@ -192,7 +192,7 @@ module.exports = {
           tipoLink: 'drive',
           discordInfo: null,
           materiaId: materias[1]?.id || 2,
-          creadorId: usuarios[4]?.id || 5,
+          estudianteId: usuarios[4]?.id || 5,
           fecha: new Date('2025-04-15'),
           tagIds: getTagIds(['ejercicios', 'práctica', 'resueltos']),
         },
@@ -205,7 +205,7 @@ module.exports = {
           tipoLink: 'discord',
           discordInfo: { servidor: 'Python Coders', canal: 'ayuda' },
           materiaId: materias[1]?.id || 2,
-          creadorId: usuarios[5]?.id || 6,
+          estudianteId: usuarios[5]?.id || 6,
           fecha: new Date('2025-01-25'),
           tagIds: getTagIds(['grupo-estudio', 'discord']),
         },
@@ -220,7 +220,7 @@ module.exports = {
           tipoLink: 'drive',
           discordInfo: null,
           materiaId: materias[2]?.id || 3,
-          creadorId: usuarios[0]?.id || 1,
+          estudianteId: usuarios[0]?.id || 1,
           fecha: new Date('2025-03-01'),
           tagIds: getTagIds(['parcial', 'teoría', 'apuntes']),
         },
@@ -233,7 +233,7 @@ module.exports = {
           tipoLink: 'youtube',
           discordInfo: null,
           materiaId: materias[2]?.id || 3,
-          creadorId: usuarios[3]?.id || 4,
+          estudianteId: usuarios[3]?.id || 4,
           fecha: new Date('2025-04-20'),
           tagIds: getTagIds(['video', 'teoría', 'explicación']),
         },
@@ -246,7 +246,7 @@ module.exports = {
           tipoLink: 'drive',
           discordInfo: null,
           materiaId: materias[2]?.id || 3,
-          creadorId: usuarios[6]?.id || 7,
+          estudianteId: usuarios[6]?.id || 7,
           fecha: new Date('2025-05-10'),
           tagIds: getTagIds(['tp', 'ejercicios', 'resueltos']),
         },
@@ -259,7 +259,7 @@ module.exports = {
           tipoLink: 'github',
           discordInfo: null,
           materiaId: materias[2]?.id || 3,
-          creadorId: usuarios[7]?.id || 8,
+          estudianteId: usuarios[7]?.id || 8,
           fecha: new Date('2025-02-28'),
           tagIds: getTagIds(['documentación', 'práctica', 'guía']),
         },
@@ -274,7 +274,7 @@ module.exports = {
           tipoLink: 'drive',
           discordInfo: null,
           materiaId: materias[3]?.id || 4,
-          creadorId: usuarios[2]?.id || 3,
+          estudianteId: usuarios[2]?.id || 3,
           fecha: new Date('2025-03-10'),
           tagIds: getTagIds(['parcial', 'teoría', 'resumen']),
         },
@@ -287,7 +287,7 @@ module.exports = {
           tipoLink: 'youtube',
           discordInfo: null,
           materiaId: materias[3]?.id || 4,
-          creadorId: usuarios[8]?.id || 9,
+          estudianteId: usuarios[8]?.id || 9,
           fecha: new Date('2025-04-05'),
           tagIds: getTagIds(['video', 'laboratorio', 'práctica']),
         },
@@ -299,11 +299,11 @@ module.exports = {
           tipoLink: 'drive',
           discordInfo: null,
           materiaId: materias[3]?.id || 4,
-          creadorId: usuarios[9]?.id || 10,
+          estudianteId: usuarios[9]?.id || 10,
           fecha: new Date('2025-05-01'),
           tagIds: getTagIds(['examen', 'resumen', 'guía']),
         },
-
+ 
         // Sistemas Operativos
         {
           titulo: 'Resumen de Gestión de Procesos',
@@ -314,7 +314,7 @@ module.exports = {
           tipoLink: 'drive',
           discordInfo: null,
           materiaId: materias[4]?.id || 5,
-          creadorId: usuarios[1]?.id || 2,
+          estudianteId: usuarios[1]?.id || 2,
           fecha: new Date('2025-04-01'),
           tagIds: getTagIds(['parcial', 'teoría', 'apuntes']),
         },
@@ -327,7 +327,7 @@ module.exports = {
           tipoLink: 'youtube',
           discordInfo: null,
           materiaId: materias[4]?.id || 5,
-          creadorId: usuarios[3]?.id || 4,
+          estudianteId: usuarios[3]?.id || 4,
           fecha: new Date('2025-02-15'),
           tagIds: getTagIds(['video', 'práctica', 'guía']),
         },
@@ -340,7 +340,7 @@ module.exports = {
           tipoLink: 'github',
           discordInfo: null,
           materiaId: materias[4]?.id || 5,
-          creadorId: usuarios[4]?.id || 5,
+          estudianteId: usuarios[4]?.id || 5,
           fecha: new Date('2025-03-20'),
           tagIds: getTagIds(['proyecto', 'código', 'práctica']),
         },
@@ -353,7 +353,7 @@ module.exports = {
           tipoLink: 'discord',
           discordInfo: { servidor: 'SO Comunidad', canal: 'recursos' },
           materiaId: materias[4]?.id || 5,
-          creadorId: usuarios[5]?.id || 6,
+          estudianteId: usuarios[5]?.id || 6,
           fecha: new Date('2025-01-30'),
           tagIds: getTagIds(['grupo-estudio', 'discord']),
         },
@@ -366,7 +366,7 @@ module.exports = {
           tipoLink: 'web',
           discordInfo: null,
           materiaId: materias[4]?.id || 5,
-          creadorId: usuarios[6]?.id || 7,
+          estudianteId: usuarios[6]?.id || 7,
           fecha: new Date('2025-05-05'),
           tagIds: getTagIds(['teoría', 'documentación', 'explicación']),
         },
@@ -385,7 +385,7 @@ module.exports = {
           tipoLink: m.tipoLink,
           discordInfo: m.discordInfo ? JSON.stringify(m.discordInfo) : null,
           materiaId: m.materiaId,
-          creadorId: m.creadorId,
+          estudianteId: m.estudianteId,
           fecha: m.fecha,
           createdAt: now,
           updatedAt: now,
@@ -426,124 +426,124 @@ module.exports = {
         // Material 1 (Complejidad) - tiene rating
         {
           materialId: createdMateriales[0].id,
-          usuarioId: usuarios[1]?.id || 2,
+          estudianteId: usuarios[1]?.id || 2,
           valor: 1,
         },
         {
           materialId: createdMateriales[0].id,
-          usuarioId: usuarios[2]?.id || 3,
+          estudianteId: usuarios[2]?.id || 3,
           valor: 1,
         },
         {
           materialId: createdMateriales[0].id,
-          usuarioId: usuarios[3]?.id || 4,
+          estudianteId: usuarios[3]?.id || 4,
           valor: 1,
         },
         {
           materialId: createdMateriales[0].id,
-          usuarioId: usuarios[4]?.id || 5,
+          estudianteId: usuarios[4]?.id || 5,
           valor: -1,
         },
 
         // Material 4 (Discord) - muy popular
         {
           materialId: createdMateriales[3].id,
-          usuarioId: usuarios[0]?.id || 1,
+          estudianteId: usuarios[0]?.id || 1,
           valor: 1,
         },
         {
           materialId: createdMateriales[3].id,
-          usuarioId: usuarios[1]?.id || 2,
+          estudianteId: usuarios[1]?.id || 2,
           valor: 1,
         },
         {
           materialId: createdMateriales[3].id,
-          usuarioId: usuarios[2]?.id || 3,
+          estudianteId: usuarios[2]?.id || 3,
           valor: 1,
         },
         {
           materialId: createdMateriales[3].id,
-          usuarioId: usuarios[5]?.id || 6,
+          estudianteId: usuarios[5]?.id || 6,
           valor: 1,
         },
         {
           materialId: createdMateriales[3].id,
-          usuarioId: usuarios[7]?.id || 8,
+          estudianteId: usuarios[7]?.id || 8,
           valor: 1,
         },
 
         // Material 7 (Python) - liked
         {
           materialId: createdMateriales[5].id,
-          usuarioId: usuarios[3]?.id || 4,
+          estudianteId: usuarios[3]?.id || 4,
           valor: 1,
         },
         {
           materialId: createdMateriales[5].id,
-          usuarioId: usuarios[4]?.id || 5,
+          estudianteId: usuarios[4]?.id || 5,
           valor: 1,
         },
         {
           materialId: createdMateriales[5].id,
-          usuarioId: usuarios[8]?.id || 9,
+          estudianteId: usuarios[8]?.id || 9,
           valor: 1,
         },
 
         // Material 10 (Discord Python) - liked
         {
           materialId: createdMateriales[8].id,
-          usuarioId: usuarios[0]?.id || 1,
+          estudianteId: usuarios[0]?.id || 1,
           valor: 1,
         },
         {
           materialId: createdMateriales[8].id,
-          usuarioId: usuarios[2]?.id || 3,
+          estudianteId: usuarios[2]?.id || 3,
           valor: 1,
         },
 
         // Material 15 (Videos lab) - liked
         {
           materialId: createdMateriales[13].id,
-          usuarioId: usuarios[1]?.id || 2,
+          estudianteId: usuarios[1]?.id || 2,
           valor: 1,
         },
         {
           materialId: createdMateriales[13].id,
-          usuarioId: usuarios[5]?.id || 6,
+          estudianteId: usuarios[5]?.id || 6,
           valor: 1,
         },
         {
           materialId: createdMateriales[13].id,
-          usuarioId: usuarios[9]?.id || 10,
+          estudianteId: usuarios[9]?.id || 10,
           valor: 1,
         },
 
         // Material 19 (Discord SO) - liked
         {
           materialId: createdMateriales[17].id,
-          usuarioId: usuarios[1]?.id || 2,
+          estudianteId: usuarios[1]?.id || 2,
           valor: 1,
         },
         {
           materialId: createdMateriales[17].id,
-          usuarioId: usuarios[3]?.id || 4,
+          estudianteId: usuarios[3]?.id || 4,
           valor: 1,
         },
         {
           materialId: createdMateriales[17].id,
-          usuarioId: usuarios[6]?.id || 7,
+          estudianteId: usuarios[6]?.id || 7,
           valor: 1,
         },
 
         // Algunos downvote para probar
         {
           materialId: createdMateriales[2].id,
-          usuarioId: usuarios[5]?.id || 6,
+          estudianteId: usuarios[5]?.id || 6,
           valor: -1,
         },
         {
           materialId: createdMateriales[9].id,
-          usuarioId: usuarios[8]?.id || 9,
+          estudianteId: usuarios[8]?.id || 9,
           valor: -1,
         },
       ];
@@ -553,7 +553,7 @@ module.exports = {
           'MaterialRatings',
           ratings.map((r) => ({
             materialId: r.materialId,
-            usuarioId: r.usuarioId,
+            estudianteId: r.estudianteId,
             valor: r.valor,
             createdAt: now,
             updatedAt: now,

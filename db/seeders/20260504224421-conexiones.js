@@ -7,9 +7,9 @@ module.exports = {
     // Limpiar tabla antes de insertar
     await queryInterface.bulkDelete('Conexiones', null, {});
 
-    // Obtener IDs de usuarios con rol 'estudiante' (excluir administradores)
+    // Obtener IDs de estudiantes
     const usuarios = await queryInterface.sequelize.query(
-      'SELECT id FROM "Usuarios" WHERE rol = \'estudiante\' ORDER BY id LIMIT 6;',
+      'SELECT e.id FROM "Estudiantes" e INNER JOIN "Usuarios" u ON e."usuarioId" = u.id WHERE u.rol = \'estudiante\' ORDER BY e.id LIMIT 6;',
       { type: queryInterface.sequelize.QueryTypes.SELECT }
     );
 
