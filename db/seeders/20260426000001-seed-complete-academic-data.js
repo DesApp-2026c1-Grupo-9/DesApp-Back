@@ -34,6 +34,10 @@ const CODIGOS_MATERIAS = {
   'Materia UNAHUR (IA)': 'UNAHUR101',
   'Materia UNAHUR I': 'UNAHUR101',
   'Materia UNAHUR II': 'UNAHUR102',
+  'Nuevos Entornos y Lenguajes': 'NEYL101',
+  'Nuevos entornos y lenguajes': 'NEYL101',
+  'Nuevos entornos y lenguajes: la producción del conocimiento en la cultura digital':
+    'NEYL101',
 };
 
 module.exports = {
@@ -485,7 +489,44 @@ module.exports = {
       }
     }
 
-    // Deshabilitar trigger temporalmente porque CarreraMaterias aún no tiene datos
+    // Asignar materias a carreras en CarreraMaterias (idempotente)
+    const carreraMateriasData = [
+      ...materiasLicInfo.map((m) => ({
+        carreraId: planLicInfo.carreraId,
+        materiaId: m.id,
+      })),
+      ...materiasTecProg.map((m) => ({
+        carreraId: planTecProg.carreraId,
+        materiaId: m.id,
+      })),
+      ...materiasLicIA.map((m) => ({
+        carreraId: planLicIA.carreraId,
+        materiaId: m.id,
+      })),
+    ];
+
+    for (const data of carreraMateriasData) {
+      const existing = await queryInterface.sequelize.query(
+        'SELECT 1 FROM "CarreraMaterias" WHERE "carreraId" = ? AND "materiaId" = ? LIMIT 1',
+        {
+          replacements: [data.carreraId, data.materiaId],
+          type: queryInterface.sequelize.QueryTypes.SELECT,
+        }
+      );
+
+      if (!existing || existing.length === 0) {
+        await queryInterface.bulkInsert('CarreraMaterias', [
+          {
+            carreraId: data.carreraId,
+            materiaId: data.materiaId,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        ]);
+      }
+    }
+
+    // Deshabilitar trigger temporalmente para insertar PlanMaterias en bloque
     await queryInterface.sequelize.query(`
       ALTER TABLE "PlanMaterias" DISABLE TRIGGER trg_check_materia_en_carrera;
     `);

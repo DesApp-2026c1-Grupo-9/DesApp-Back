@@ -43,6 +43,10 @@ const CODIGOS_MATERIAS = {
   'Materia UNAHUR (IA)': 'UNAHUR101',
   'Materia UNAHUR I': 'UNAHUR101',
   'Materia UNAHUR II': 'UNAHUR102',
+  'Nuevos Entornos y Lenguajes': 'NEYL101',
+  'Nuevos entornos y lenguajes': 'NEYL101',
+  'Nuevos entornos y lenguajes: la producción del conocimiento en la cultura digital':
+    'NEYL101',
 };
 
 module.exports = {

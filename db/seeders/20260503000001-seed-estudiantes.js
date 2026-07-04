@@ -35,6 +35,12 @@ module.exports = {
         (c) => c.nombre === 'Tecnicatura en Inteligencia Artificial'
       )?.id;
 
+      const carreraIdPorNombre = {
+        'Licenciatura en Informática': licInfoId,
+        'Tecnicatura en Programación': tecProgId,
+        'Tecnicatura en Inteligencia Artificial': licIAId,
+      };
+
       // Datos de estudiantes: [nombre, apellido, email, fecha, carreraId, genero]
       const datos = [
         [
@@ -151,6 +157,17 @@ module.exports = {
         ],
       ];
 
+      // Carreras extra por estudiante para probar compatibilidad multi-carrera
+      const carrerasAdicionalesPorEmail = {
+        'ana.garcia@estudiante.unahur.edu.ar': ['Tecnicatura en Programación'],
+        'juan.martinez@estudiante.unahur.edu.ar': [
+          'Licenciatura en Informática',
+        ],
+        'maria.gonzalez@estudiante.unahur.edu.ar': [
+          'Licenciatura en Informática',
+        ],
+      };
+
       for (const [nombre, apellido, email, fecha, carreraId, genero] of datos) {
         // Verificar si el usuario ya existe
         let usuarioId;
@@ -248,6 +265,35 @@ module.exports = {
                 type: queryInterface.sequelize.QueryTypes.INSERT,
               }
             );
+          }
+
+          const carrerasAdicionales = carrerasAdicionalesPorEmail[email] || [];
+
+          for (const carreraNombre of carrerasAdicionales) {
+            const carreraAdicionalId = carreraIdPorNombre[carreraNombre];
+            if (!carreraAdicionalId) continue;
+
+            const existingRelacionAdicional = await queryInterface.sequelize.query(
+              'SELECT 1 FROM "EstudianteCarreras" WHERE "estudianteId" = $1 AND "carreraId" = $2 LIMIT 1',
+              {
+                bind: [estudianteId, carreraAdicionalId],
+                type: queryInterface.sequelize.QueryTypes.SELECT,
+              }
+            );
+
+            if (
+              !existingRelacionAdicional ||
+              existingRelacionAdicional.length === 0
+            ) {
+              await queryInterface.sequelize.query(
+                `INSERT INTO "EstudianteCarreras" ("estudianteId", "carreraId", "createdAt", "updatedAt") 
+                     VALUES ($1, $2, NOW(), NOW())`,
+                {
+                  bind: [estudianteId, carreraAdicionalId],
+                  type: queryInterface.sequelize.QueryTypes.INSERT,
+                }
+              );
+            }
           }
         }
       }
