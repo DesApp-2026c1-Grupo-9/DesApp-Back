@@ -8,6 +8,7 @@ import debugPkg from 'debug';
 import http from 'http';
 import app from '../lib/app';
 import db from '../lib/models';
+import iniciarRecordatorioSesiones from '../lib/jobs/recordatorioSesiones';
 
 const debug = debugPkg('js/www:server');
 
@@ -27,6 +28,7 @@ if (!port) {
 
 // Run sequelize before listen
 db.sequelize.authenticate().then(() => {
+  iniciarRecordatorioSesiones();
   app.listen(port, () => {
     console.log(`¡Aplicación iniciada! ====> 🌎 http://localhost:${port}`);
   });
