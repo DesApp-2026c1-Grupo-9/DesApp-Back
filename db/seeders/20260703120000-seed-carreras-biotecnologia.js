@@ -83,7 +83,7 @@ const MATERIAS_LIC_BIOTECNOLOGIA = [
     nombre: 'Inglés I',
     anio: 1,
     tipo: 'cuatrimestral',
-    cargaHoraria: 32,
+    cargaHoraria: 6,
   },
   {
     nombre: 'Taller de Laboratorio I',
@@ -284,10 +284,10 @@ const MATERIAS_LIC_BIOTECNOLOGIA = [
     cargaHoraria: 64,
   },
   {
-    nombre: 'Inglés II (Técnico)',
+    nombre: 'Inglés II',
     anio: 5,
     tipo: 'cuatrimestral',
-    cargaHoraria: 32,
+    cargaHoraria: 6,
   },
   {
     nombre: 'Biotecnología Animal',
