@@ -143,6 +143,25 @@ module.exports = {
           tagIds: getTagIds(['grupo-estudio', 'discord']),
         },
         {
+          titulo: 'Servidor de Estudio - Desarrollo de Apps',
+          descripcion:
+            'Únete al grupo de Discord de Desarrollo de Aplicaciones para estudiar, consultar dudas y compartir recursos.',
+          tipo: 'link',
+          url: 'https://discord.com/invite/STNsJxzjx',
+          tipoLink: 'discord',
+          discordInfo: { servidor: 'Desarrollo de Apps', canal: 'general' },
+          materiaId:
+            materias.find((m) => m.nombre === 'Desarrollo de Aplicaciones')
+              ?.id ||
+            materias.find((m) =>
+              m.nombre.includes('Desarrollo de Aplicaciones')
+            )?.id ||
+            27,
+          estudianteId: usuarios[0]?.id || 1,
+          fecha: new Date('2025-02-20'),
+          tagIds: getTagIds(['grupo-estudio', 'discord']),
+        },
+        {
           titulo: 'Repositorio GitHub - Implementaciones',
           descripcion:
             'Código fuente en Python y Java de los algoritmos vistos en clase',
@@ -303,7 +322,7 @@ module.exports = {
           fecha: new Date('2025-05-01'),
           tagIds: getTagIds(['examen', 'resumen', 'guía']),
         },
- 
+
         // Sistemas Operativos
         {
           titulo: 'Resumen de Gestión de Procesos',

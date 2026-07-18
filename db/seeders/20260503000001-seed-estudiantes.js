@@ -41,6 +41,166 @@ module.exports = {
         'Tecnicatura en Inteligencia Artificial': licIAId,
       };
 
+      const trayectoriasPorEmail = {
+        'ana.garcia@estudiante.unahur.edu.ar': [
+          'aprobada',
+          'aprobada',
+          'regularizada',
+          'cursando',
+          'cursando',
+        ],
+        'carlos.rodriguez@estudiante.unahur.edu.ar': [
+          'aprobada',
+          'aprobada',
+          'aprobada',
+          'regularizada',
+          'cursando',
+        ],
+        'maria.gonzalez@estudiante.unahur.edu.ar': [
+          'aprobada',
+          'regularizada',
+          'cursando',
+          'cursando',
+        ],
+        'juan.martinez@estudiante.unahur.edu.ar': [
+          'aprobada',
+          'cursando',
+          'cursando',
+        ],
+        'sofia.lopez@estudiante.unahur.edu.ar': [
+          'aprobada',
+          'aprobada',
+          'aprobada',
+          'regularizada',
+          'cursando',
+        ],
+        'diego.fernandez@estudiante.unahur.edu.ar': [
+          'aprobada',
+          'aprobada',
+          'aprobada',
+          'aprobada',
+          'aprobada',
+          'aprobada',
+          'aprobada',
+          'aprobada',
+          'aprobada',
+          'aprobada',
+          'aprobada',
+          'aprobada',
+          'aprobada',
+          'aprobada',
+          'regularizada',
+          'cursando',
+          'cursando',
+          'cursando',
+        ],
+        'valentina.perez@estudiante.unahur.edu.ar': [
+          'aprobada',
+          'aprobada',
+          'aprobada',
+          'aprobada',
+          'regularizada',
+        ],
+        'tomas.silva@estudiante.unahur.edu.ar': ['aprobada', 'cursando'],
+        'camila.torres@estudiante.unahur.edu.ar': ['cursando', 'cursando'],
+        'nicolas.morales@estudiante.unahur.edu.ar': [
+          'aprobada',
+          'aprobada',
+          'aprobada',
+          'aprobada',
+          'regularizada',
+          'cursando',
+        ],
+        'juana.azurduy@example.com': ['aprobada', 'regularizada'],
+        'jose.artigas@example.com': ['regularizada', 'cursando'],
+        'simon.bolivar@example.com': [
+          'aprobada',
+          'aprobada',
+          'aprobada',
+          'aprobada',
+          'regularizada',
+          'cursando',
+        ],
+      };
+
+      const upsertEstudianteMateria = async (
+        estudianteId,
+        materiaId,
+        estado
+      ) => {
+        const existingRelacion = await queryInterface.sequelize.query(
+          'SELECT id FROM "EstudianteMaterias" WHERE "estudianteId" = $1 AND "materiaId" = $2 LIMIT 1',
+          {
+            bind: [estudianteId, materiaId],
+            type: queryInterface.sequelize.QueryTypes.SELECT,
+          }
+        );
+
+        if (existingRelacion && existingRelacion.length > 0) {
+          await queryInterface.sequelize.query(
+            'UPDATE "EstudianteMaterias" SET estado = $1, "updatedAt" = NOW() WHERE id = $2',
+            {
+              bind: [estado, existingRelacion[0].id],
+            }
+          );
+          return;
+        }
+
+        await queryInterface.sequelize.query(
+          `INSERT INTO "EstudianteMaterias" ("estudianteId", "materiaId", estado, "createdAt", "updatedAt")
+               VALUES ($1, $2, $3, NOW(), NOW())`,
+          {
+            bind: [estudianteId, materiaId, estado],
+            type: queryInterface.sequelize.QueryTypes.INSERT,
+          }
+        );
+      };
+
+      const seedTrayectoriaAcademica = async (estudianteId, email) => {
+        const estadosDeseados = trayectoriasPorEmail[email] || [];
+
+        if (estadosDeseados.length === 0) {
+          return;
+        }
+
+        const materiasPlanRows = await queryInterface.sequelize.query(
+          `SELECT pm."materiaId", COALESCE(pm.anio, 999) AS anio
+           FROM "EstudianteCarreras" ec
+           INNER JOIN "PlanesDeEstudio" p ON p."carreraId" = ec."carreraId" AND p.estado = 'vigente'
+           INNER JOIN "PlanMaterias" pm ON pm."planId" = p.id
+           WHERE ec."estudianteId" = $1
+           ORDER BY COALESCE(pm.anio, 999), pm."materiaId"`,
+          {
+            bind: [estudianteId],
+            type: queryInterface.sequelize.QueryTypes.SELECT,
+          }
+        );
+
+        const materiasPlan = [];
+        const materiaIds = new Set();
+
+        for (const row of materiasPlanRows) {
+          if (materiaIds.has(row.materiaId)) {
+            continue;
+          }
+
+          materiaIds.add(row.materiaId);
+          materiasPlan.push(row);
+        }
+
+        for (
+          let index = 0;
+          index < estadosDeseados.length && index < materiasPlan.length;
+          index++
+        ) {
+          await upsertEstudianteMateria(
+            estudianteId,
+            materiasPlan[index].materiaId,
+            estadosDeseados[index]
+          );
+        }
+      };
+
       // Datos de estudiantes: [nombre, apellido, email, fecha, carreraId, genero]
       const datos = [
         [
@@ -295,6 +455,8 @@ module.exports = {
               );
             }
           }
+
+          await seedTrayectoriaAcademica(estudianteId, email);
         }
       }
       console.log('Seed de estudiantes completado exitosamente (idempotente)');
